@@ -1,0 +1,838 @@
+State Changes:
+Position 0: switching to do()
+Position 103: switching to do()
+Position 138: switching to do()
+Position 234: switching to don't()
+Position 303: switching to don't()
+Position 616: switching to don't()
+Position 691: switching to don't()
+Position 739: switching to don't()
+Position 1002: switching to don't()
+Position 1337: switching to don't()
+Position 1698: switching to don't()
+Position 2139: switching to do()
+Position 2386: switching to do()
+Position 2759: switching to don't()
+Position 2835: switching to do()
+Position 3205: switching to do()
+Position 3690: switching to do()
+Position 3778: switching to do()
+Position 3977: switching to do()
+Position 4158: switching to don't()
+Position 4552: switching to do()
+Position 4585: switching to do()
+Position 4754: switching to do()
+Position 4939: switching to do()
+Position 5137: switching to don't()
+Position 5333: switching to don't()
+Position 5512: switching to don't()
+Position 5648: switching to don't()
+Position 5866: switching to do()
+Position 5965: switching to do()
+Position 5998: switching to do()
+Position 6282: switching to do()
+Position 6463: switching to do()
+Position 6594: switching to don't()
+Position 6945: switching to do()
+Position 7032: switching to do()
+Position 7191: switching to don't()
+Position 7284: switching to don't()
+Position 7734: switching to do()
+Position 8087: switching to do()
+Position 8202: switching to do()
+Position 8534: switching to don't()
+Position 8917: switching to do()
+Position 9063: switching to do()
+Position 9389: switching to do()
+Position 9746: switching to don't()
+Position 9793: switching to do()
+Position 10248: switching to don't()
+Position 11571: switching to do()
+Position 11729: switching to don't()
+Position 11828: switching to don't()
+Position 11963: switching to do()
+Position 12843: switching to don't()
+Position 13530: switching to do()
+Position 13695: switching to don't()
+Position 13828: switching to don't()
+Position 14042: switching to do()
+Position 14129: switching to don't()
+Position 14285: switching to don't()
+Position 15052: switching to do()
+Position 15370: switching to do()
+Position 15666: switching to do()
+Position 15768: switching to don't()
+Position 15964: switching to do()
+Position 16151: switching to don't()
+Position 16896: switching to don't()
+Position 16941: switching to do()
+Position 17416: switching to don't()
+Position 17707: switching to do()
+Position 18100: switching to don't()
+Position 18187: switching to don't()
+Position 18606: switching to don't()
+Position 18639: switching to don't()
+Position 18751: switching to do()
+Position 18846: switching to don't()
+Position 19069: switching to don't()
+Position 19290: switching to don't()
+Position 19550: switching to do()
+Position 19601: switching to do()
+Position 19800: switching to do()
+----------------------------------------
+
+Counted: mul(595,110) = 65450 at position 5
+Counted: mul(732,729) = 533628 at position 37
+Counted: mul(924,700) = 646800 at position 54
+Counted: mul(633,308) = 194964 at position 81
+Counted: mul(262,908) = 237896 at position 111
+Counted: mul(389,398) = 154822 at position 125
+Counted: mul(149,778) = 115922 at position 150
+Counted: mul(613,679) = 416227 at position 185
+Counted: mul(265,766) = 202990 at position 197
+Counted: mul(630,508) = 320040 at position 219
+Skipped: mul(147,924) at position 242
+Skipped: mul(474,738) at position 278
+Skipped: mul(30,245) at position 312
+Skipped: mul(654,901) at position 339
+Skipped: mul(448,606) at position 373
+Skipped: mul(224,308) at position 391
+Skipped: mul(65,32) at position 412
+Skipped: mul(955,7) at position 437
+Skipped: mul(210,861) at position 449
+Skipped: mul(740,438) at position 464
+Skipped: mul(739,458) at position 476
+Skipped: mul(707,293) at position 495
+Skipped: mul(190,804) at position 509
+Skipped: mul(683,718) at position 533
+Skipped: mul(858,702) at position 562
+Skipped: mul(35,359) at position 585
+Skipped: mul(856,94) at position 601
+Skipped: mul(251,825) at position 625
+Skipped: mul(865,187) at position 659
+Skipped: mul(560,114) at position 706
+Skipped: mul(960,274) at position 727
+Skipped: mul(68,30) at position 746
+Skipped: mul(88,750) at position 772
+Skipped: mul(643,552) at position 807
+Skipped: mul(544,820) at position 839
+Skipped: mul(129,582) at position 871
+Skipped: mul(130,830) at position 885
+Skipped: mul(778,521) at position 919
+Skipped: mul(351,104) at position 954
+Skipped: mul(792,155) at position 966
+Skipped: mul(990,780) at position 983
+Skipped: mul(352,9) at position 1017
+Skipped: mul(379,297) at position 1057
+Skipped: mul(478,803) at position 1096
+Skipped: mul(391,821) at position 1134
+Skipped: mul(160,877) at position 1163
+Skipped: mul(893,529) at position 1190
+Skipped: mul(170,765) at position 1210
+Skipped: mul(630,481) at position 1230
+Skipped: mul(576,452) at position 1249
+Skipped: mul(839,395) at position 1265
+Skipped: mul(630,148) at position 1289
+Skipped: mul(637,733) at position 1301
+Skipped: mul(965,332) at position 1345
+Skipped: mul(563,908) at position 1361
+Skipped: mul(907,261) at position 1391
+Skipped: mul(683,576) at position 1408
+Skipped: mul(687,422) at position 1436
+Skipped: mul(811,962) at position 1453
+Skipped: mul(717,674) at position 1466
+Skipped: mul(402,513) at position 1494
+Skipped: mul(922,320) at position 1516
+Skipped: mul(536,772) at position 1534
+Skipped: mul(217,696) at position 1568
+Skipped: mul(41,999) at position 1608
+Skipped: mul(615,164) at position 1620
+Skipped: mul(488,200) at position 1640
+Skipped: mul(235,838) at position 1660
+Skipped: mul(428,894) at position 1681
+Skipped: mul(502,555) at position 1710
+Skipped: mul(397,619) at position 1734
+Skipped: mul(677,653) at position 1746
+Skipped: mul(761,412) at position 1785
+Skipped: mul(434,521) at position 1809
+Skipped: mul(319,307) at position 1838
+Skipped: mul(13,180) at position 1863
+Skipped: mul(560,200) at position 1882
+Skipped: mul(269,735) at position 1903
+Skipped: mul(131,915) at position 1915
+Skipped: mul(455,277) at position 1953
+Skipped: mul(721,65) at position 1978
+Skipped: mul(387,564) at position 1998
+Skipped: mul(854,744) at position 2041
+Skipped: mul(176,188) at position 2060
+Skipped: mul(914,199) at position 2077
+Skipped: mul(248,259) at position 2092
+Skipped: mul(559,588) at position 2125
+Counted: mul(445,787) = 350215 at position 2156
+Counted: mul(833,324) = 269892 at position 2173
+Counted: mul(687,390) = 267930 at position 2216
+Counted: mul(929,336) = 312144 at position 2270
+Counted: mul(865,751) = 649615 at position 2283
+Counted: mul(881,809) = 712729 at position 2299
+Counted: mul(396,641) = 253836 at position 2355
+Counted: mul(210,926) = 194460 at position 2403
+Counted: mul(437,84) = 36708 at position 2424
+Counted: mul(86,264) = 22704 at position 2464
+Counted: mul(344,101) = 34744 at position 2483
+Counted: mul(274,657) = 180018 at position 2508
+Counted: mul(997,598) = 596206 at position 2541
+Counted: mul(534,554) = 295836 at position 2557
+Counted: mul(466,734) = 342044 at position 2569
+Counted: mul(910,968) = 880880 at position 2582
+Counted: mul(308,302) = 93016 at position 2606
+Counted: mul(745,927) = 690615 at position 2623
+Counted: mul(897,144) = 129168 at position 2639
+Counted: mul(408,883) = 360264 at position 2674
+Counted: mul(319,561) = 178959 at position 2710
+Counted: mul(423,423) = 178929 at position 2728
+Skipped: mul(775,273) at position 2780
+Skipped: mul(478,184) at position 2808
+Counted: mul(928,991) = 919648 at position 2847
+Counted: mul(113,915) = 103395 at position 2872
+Counted: mul(768,68) = 52224 at position 2907
+Counted: mul(799,399) = 318801 at position 2926
+Counted: mul(476,439) = 208964 at position 2955
+Counted: mul(441,182) = 80262 at position 2976
+Counted: mul(50,277) = 13850 at position 2993
+Counted: mul(941,704) = 662464 at position 3025
+Counted: mul(414,239) = 98946 at position 3056
+Counted: mul(623,607) = 378161 at position 3108
+Counted: mul(77,12) = 924 at position 3122
+Counted: mul(754,199) = 150046 at position 3147
+Counted: mul(683,969) = 661827 at position 3159
+Counted: mul(343,649) = 222607 at position 3172
+Counted: mul(306,311) = 95166 at position 3231
+Counted: mul(881,403) = 355043 at position 3269
+Counted: mul(319,207) = 66033 at position 3284
+Counted: mul(298,790) = 235420 at position 3304
+Counted: mul(401,954) = 382554 at position 3325
+Counted: mul(150,216) = 32400 at position 3349
+Counted: mul(76,864) = 65664 at position 3378
+Counted: mul(576,9) = 5184 at position 3408
+Counted: mul(228,354) = 80712 at position 3437
+Counted: mul(868,367) = 318556 at position 3450
+Counted: mul(803,53) = 42559 at position 3484
+Counted: mul(204,512) = 104448 at position 3510
+Counted: mul(502,887) = 445274 at position 3540
+Counted: mul(623,265) = 165095 at position 3568
+Counted: mul(113,681) = 76953 at position 3611
+Counted: mul(521,682) = 355322 at position 3629
+Counted: mul(651,598) = 389298 at position 3657
+Counted: mul(840,408) = 342720 at position 3678
+Counted: mul(820,511) = 419020 at position 3717
+Counted: mul(727,13) = 9451 at position 3734
+Counted: mul(970,417) = 404490 at position 3745
+Counted: mul(259,372) = 96348 at position 3792
+Counted: mul(255,971) = 247605 at position 3818
+Counted: mul(460,320) = 147200 at position 3850
+Counted: mul(849,743) = 630807 at position 3864
+Counted: mul(180,806) = 145080 at position 3885
+Counted: mul(649,876) = 568524 at position 3928
+Counted: mul(482,581) = 280042 at position 4012
+Counted: mul(66,275) = 18150 at position 4028
+Counted: mul(647,525) = 339675 at position 4039
+Counted: mul(377,626) = 236002 at position 4054
+Counted: mul(630,898) = 565740 at position 4075
+Counted: mul(317,506) = 160402 at position 4088
+Counted: mul(903,888) = 801864 at position 4100
+Counted: mul(766,841) = 644206 at position 4121
+Skipped: mul(145,488) at position 4180
+Skipped: mul(712,25) at position 4194
+Skipped: mul(797,334) at position 4206
+Skipped: mul(323,141) at position 4240
+Skipped: mul(848,645) at position 4279
+Skipped: mul(181,788) at position 4309
+Skipped: mul(103,568) at position 4338
+Skipped: mul(343,438) at position 4369
+Skipped: mul(349,623) at position 4398
+Skipped: mul(614,519) at position 4411
+Skipped: mul(318,996) at position 4445
+Skipped: mul(929,651) at position 4472
+Skipped: mul(683,248) at position 4489
+Skipped: mul(717,522) at position 4531
+Counted: mul(4,875) = 3500 at position 4565
+Counted: mul(22,93) = 2046 at position 4597
+Counted: mul(130,509) = 66170 at position 4625
+Counted: mul(984,787) = 774408 at position 4651
+Counted: mul(454,365) = 165710 at position 4667
+Counted: mul(249,223) = 55527 at position 4687
+Counted: mul(503,598) = 300794 at position 4699
+Counted: mul(369,549) = 202581 at position 4713
+Counted: mul(977,871) = 850967 at position 4758
+Counted: mul(762,528) = 402336 at position 4777
+Counted: mul(917,277) = 254009 at position 4803
+Counted: mul(659,953) = 628027 at position 4819
+Counted: mul(749,739) = 553511 at position 4850
+Counted: mul(36,964) = 34704 at position 4865
+Counted: mul(386,593) = 228898 at position 4879
+Counted: mul(535,262) = 140170 at position 4901
+Counted: mul(619,924) = 571956 at position 4951
+Counted: mul(146,285) = 41610 at position 4965
+Counted: mul(284,899) = 255316 at position 5007
+Counted: mul(58,291) = 16878 at position 5041
+Counted: mul(805,823) = 662515 at position 5052
+Counted: mul(992,993) = 985056 at position 5065
+Counted: mul(353,655) = 231215 at position 5093
+Counted: mul(228,4) = 912 at position 5124
+Skipped: mul(498,324) at position 5145
+Skipped: mul(633,673) at position 5167
+Skipped: mul(526,369) at position 5179
+Skipped: mul(697,112) at position 5193
+Skipped: mul(234,578) at position 5211
+Skipped: mul(896,392) at position 5240
+Skipped: mul(121,437) at position 5267
+Skipped: mul(63,503) at position 5286
+Skipped: mul(977,491) at position 5315
+Skipped: mul(292,954) at position 5349
+Skipped: mul(683,74) at position 5375
+Skipped: mul(204,861) at position 5403
+Skipped: mul(455,989) at position 5432
+Skipped: mul(218,118) at position 5465
+Skipped: mul(731,156) at position 5558
+Skipped: mul(390,980) at position 5580
+Skipped: mul(698,483) at position 5606
+Skipped: mul(617,983) at position 5618
+Skipped: mul(446,527) at position 5655
+Skipped: mul(418,536) at position 5691
+Skipped: mul(651,531) at position 5715
+Skipped: mul(532,68) at position 5728
+Skipped: mul(12,180) at position 5748
+Skipped: mul(654,368) at position 5760
+Skipped: mul(32,581) at position 5808
+Skipped: mul(41,175) at position 5842
+Skipped: mul(36,825) at position 5855
+Counted: mul(541,776) = 419816 at position 5889
+Counted: mul(413,399) = 164787 at position 5928
+Counted: mul(589,631) = 371659 at position 5976
+Counted: mul(87,334) = 29058 at position 6021
+Counted: mul(293,208) = 60944 at position 6042
+Counted: mul(333,989) = 329337 at position 6064
+Counted: mul(516,15) = 7740 at position 6081
+Counted: mul(888,937) = 832056 at position 6095
+Counted: mul(299,886) = 264914 at position 6123
+Counted: mul(304,310) = 94240 at position 6149
+Counted: mul(533,483) = 257439 at position 6183
+Counted: mul(462,5) = 2310 at position 6208
+Counted: mul(222,429) = 95238 at position 6225
+Counted: mul(249,734) = 182766 at position 6250
+Counted: mul(499,633) = 315867 at position 6312
+Counted: mul(593,430) = 254990 at position 6336
+Counted: mul(911,397) = 361667 at position 6376
+Counted: mul(939,597) = 560583 at position 6407
+Counted: mul(53,794) = 42082 at position 6431
+Counted: mul(297,882) = 261954 at position 6451
+Counted: mul(651,458) = 298158 at position 6485
+Counted: mul(773,576) = 445248 at position 6511
+Counted: mul(699,864) = 603936 at position 6551
+Counted: mul(456,889) = 405384 at position 6580
+Skipped: mul(303,720) at position 6621
+Skipped: mul(14,909) at position 6662
+Skipped: mul(520,164) at position 6677
+Skipped: mul(433,718) at position 6708
+Skipped: mul(186,91) at position 6742
+Skipped: mul(872,843) at position 6781
+Skipped: mul(285,779) at position 6855
+Skipped: mul(912,530) at position 6870
+Skipped: mul(954,4) at position 6899
+Skipped: mul(703,434) at position 6917
+Skipped: mul(888,934) at position 6932
+Counted: mul(284,50) = 14200 at position 6974
+Counted: mul(41,862) = 35342 at position 6989
+Counted: mul(749,83) = 62167 at position 7007
+Counted: mul(283,581) = 164423 at position 7018
+Counted: mul(866,925) = 801050 at position 7047
+Counted: mul(439,204) = 89556 at position 7076
+Counted: mul(724,984) = 712416 at position 7100
+Counted: mul(291,595) = 173145 at position 7127
+Counted: mul(710,846) = 600660 at position 7145
+Counted: mul(719,20) = 14380 at position 7173
+Skipped: mul(390,194) at position 7218
+Skipped: mul(620,559) at position 7246
+Skipped: mul(487,458) at position 7295
+Skipped: mul(284,240) at position 7319
+Skipped: mul(140,943) at position 7354
+Skipped: mul(379,292) at position 7371
+Skipped: mul(184,248) at position 7391
+Skipped: mul(476,864) at position 7428
+Skipped: mul(383,543) at position 7448
+Skipped: mul(54,809) at position 7461
+Skipped: mul(732,830) at position 7493
+Skipped: mul(156,846) at position 7528
+Skipped: mul(241,296) at position 7548
+Skipped: mul(331,481) at position 7594
+Skipped: mul(342,855) at position 7618
+Skipped: mul(94,545) at position 7646
+Skipped: mul(682,26) at position 7669
+Skipped: mul(962,26) at position 7688
+Skipped: mul(663,251) at position 7699
+Skipped: mul(858,699) at position 7719
+Counted: mul(894,669) = 598086 at position 7754
+Counted: mul(734,520) = 381680 at position 7768
+Counted: mul(690,168) = 115920 at position 7781
+Counted: mul(84,758) = 63672 at position 7796
+Counted: mul(374,587) = 219538 at position 7825
+Counted: mul(887,673) = 596951 at position 7864
+Counted: mul(17,756) = 12852 at position 7893
+Counted: mul(814,306) = 249084 at position 7909
+Counted: mul(138,523) = 72174 at position 7934
+Counted: mul(961,961) = 923521 at position 7946
+Counted: mul(529,982) = 519478 at position 7987
+Counted: mul(489,849) = 415161 at position 8002
+Counted: mul(570,381) = 217170 at position 8020
+Counted: mul(826,522) = 431172 at position 8049
+Counted: mul(643,495) = 318285 at position 8109
+Counted: mul(34,439) = 14926 at position 8121
+Counted: mul(657,375) = 246375 at position 8132
+Counted: mul(177,65) = 11505 at position 8152
+Counted: mul(552,376) = 207552 at position 8172
+Counted: mul(689,184) = 126776 at position 8209
+Counted: mul(711,957) = 680427 at position 8223
+Counted: mul(106,102) = 10812 at position 8250
+Counted: mul(468,125) = 58500 at position 8262
+Counted: mul(451,95) = 42845 at position 8278
+Counted: mul(792,372) = 294624 at position 8289
+Counted: mul(207,775) = 160425 at position 8330
+Counted: mul(877,149) = 130673 at position 8358
+Counted: mul(994,994) = 988036 at position 8379
+Counted: mul(503,637) = 320411 at position 8401
+Counted: mul(301,442) = 133042 at position 8436
+Counted: mul(727,66) = 47982 at position 8479
+Counted: mul(438,988) = 432744 at position 8509
+Skipped: mul(581,545) at position 8552
+Skipped: mul(11,800) at position 8589
+Skipped: mul(967,965) at position 8612
+Skipped: mul(935,158) at position 8624
+Skipped: mul(816,96) at position 8668
+Skipped: mul(529,111) at position 8708
+Skipped: mul(360,694) at position 8738
+Skipped: mul(30,413) at position 8767
+Skipped: mul(319,911) at position 8783
+Skipped: mul(148,10) at position 8827
+Skipped: mul(247,811) at position 8845
+Skipped: mul(660,54) at position 8864
+Skipped: mul(694,449) at position 8882
+Skipped: mul(615,285) at position 8902
+Counted: mul(800,658) = 526400 at position 8933
+Counted: mul(155,2) = 310 at position 8965
+Counted: mul(763,673) = 513499 at position 8997
+Counted: mul(813,428) = 347964 at position 9026
+Counted: mul(865,165) = 142725 at position 9051
+Counted: mul(328,267) = 87576 at position 9087
+Counted: mul(714,826) = 589764 at position 9117
+Counted: mul(826,638) = 526988 at position 9131
+Counted: mul(500,76) = 38000 at position 9157
+Counted: mul(10,267) = 2670 at position 9173
+Counted: mul(541,994) = 537754 at position 9218
+Counted: mul(47,669) = 31443 at position 9257
+Counted: mul(998,298) = 297404 at position 9286
+Counted: mul(937,507) = 475059 at position 9299
+Counted: mul(148,102) = 15096 at position 9332
+Counted: mul(39,980) = 38220 at position 9344
+Counted: mul(690,355) = 244950 at position 9371
+Counted: mul(59,509) = 30031 at position 9398
+Counted: mul(57,388) = 22116 at position 9418
+Counted: mul(442,904) = 399568 at position 9436
+Counted: mul(702,195) = 136890 at position 9461
+Counted: mul(244,471) = 114924 at position 9486
+Counted: mul(19,675) = 12825 at position 9532
+Counted: mul(270,397) = 107190 at position 9574
+Counted: mul(855,233) = 199215 at position 9604
+Counted: mul(935,285) = 266475 at position 9627
+Counted: mul(834,256) = 213504 at position 9639
+Counted: mul(915,279) = 255285 at position 9667
+Counted: mul(805,164) = 132020 at position 9710
+Skipped: mul(27,901) at position 9770
+Skipped: mul(389,398) at position 9781
+Counted: mul(203,999) = 202797 at position 9803
+Counted: mul(432,373) = 161136 at position 9833
+Counted: mul(436,907) = 395452 at position 9848
+Counted: mul(236,42) = 9912 at position 9880
+Counted: mul(528,36) = 19008 at position 9919
+Counted: mul(514,585) = 300690 at position 9931
+Counted: mul(263,66) = 17358 at position 9944
+Counted: mul(665,667) = 443555 at position 9970
+Counted: mul(430,685) = 294550 at position 9992
+Counted: mul(842,44) = 37048 at position 10006
+Counted: mul(759,831) = 630729 at position 10027
+Counted: mul(155,353) = 54715 at position 10060
+Counted: mul(441,973) = 429093 at position 10074
+Counted: mul(692,737) = 510004 at position 10099
+Counted: mul(646,554) = 357884 at position 10132
+Counted: mul(207,894) = 185058 at position 10156
+Counted: mul(887,189) = 167643 at position 10168
+Counted: mul(947,687) = 650589 at position 10183
+Counted: mul(158,901) = 142358 at position 10218
+Counted: mul(852,717) = 610884 at position 10232
+Skipped: mul(881,340) at position 10287
+Skipped: mul(126,700) at position 10306
+Skipped: mul(147,860) at position 10318
+Skipped: mul(284,865) at position 10339
+Skipped: mul(830,664) at position 10365
+Skipped: mul(378,763) at position 10401
+Skipped: mul(869,611) at position 10414
+Skipped: mul(904,402) at position 10447
+Skipped: mul(171,693) at position 10468
+Skipped: mul(570,117) at position 10494
+Skipped: mul(643,646) at position 10533
+Skipped: mul(840,147) at position 10565
+Skipped: mul(823,155) at position 10584
+Skipped: mul(365,934) at position 10619
+Skipped: mul(68,395) at position 10631
+Skipped: mul(271,627) at position 10650
+Skipped: mul(701,973) at position 10663
+Skipped: mul(781,778) at position 10676
+Skipped: mul(815,159) at position 10689
+Skipped: mul(746,396) at position 10712
+Skipped: mul(724,844) at position 10724
+Skipped: mul(954,395) at position 10754
+Skipped: mul(27,969) at position 10781
+Skipped: mul(652,117) at position 10811
+Skipped: mul(513,501) at position 10842
+Skipped: mul(906,170) at position 10863
+Skipped: mul(341,349) at position 10883
+Skipped: mul(990,89) at position 10895
+Skipped: mul(543,751) at position 10922
+Skipped: mul(161,830) at position 10938
+Skipped: mul(60,852) at position 10955
+Skipped: mul(110,789) at position 10966
+Skipped: mul(232,23) at position 10994
+Skipped: mul(113,909) at position 11017
+Skipped: mul(218,441) at position 11042
+Skipped: mul(383,714) at position 11068
+Skipped: mul(802,923) at position 11094
+Skipped: mul(875,944) at position 11127
+Skipped: mul(974,967) at position 11152
+Skipped: mul(359,518) at position 11165
+Skipped: mul(725,236) at position 11183
+Skipped: mul(223,195) at position 11199
+Skipped: mul(965,312) at position 11224
+Skipped: mul(651,272) at position 11244
+Skipped: mul(586,166) at position 11260
+Skipped: mul(973,90) at position 11279
+Skipped: mul(522,382) at position 11316
+Skipped: mul(327,551) at position 11351
+Skipped: mul(759,5) at position 11389
+Skipped: mul(676,54) at position 11416
+Skipped: mul(108,594) at position 11451
+Skipped: mul(470,453) at position 11463
+Skipped: mul(540,6) at position 11486
+Skipped: mul(34,148) at position 11497
+Skipped: mul(543,235) at position 11525
+Skipped: mul(293,694) at position 11557
+Counted: mul(194,754) = 146276 at position 11577
+Counted: mul(695,979) = 680405 at position 11595
+Counted: mul(347,45) = 15615 at position 11635
+Counted: mul(257,87) = 22359 at position 11656
+Counted: mul(315,641) = 201915 at position 11679
+Skipped: mul(313,874) at position 11743
+Skipped: mul(819,556) at position 11779
+Skipped: mul(317,224) at position 11805
+Skipped: mul(724,210) at position 11843
+Skipped: mul(653,313) at position 11883
+Skipped: mul(718,132) at position 11902
+Skipped: mul(304,399) at position 11915
+Skipped: mul(813,580) at position 11928
+Counted: mul(420,147) = 61740 at position 11991
+Counted: mul(286,778) = 222508 at position 12010
+Counted: mul(843,55) = 46365 at position 12027
+Counted: mul(708,572) = 404976 at position 12039
+Counted: mul(804,987) = 793548 at position 12059
+Counted: mul(685,322) = 220570 at position 12087
+Counted: mul(495,848) = 419760 at position 12124
+Counted: mul(722,749) = 540778 at position 12158
+Counted: mul(556,699) = 388644 at position 12170
+Counted: mul(471,814) = 383394 at position 12206
+Counted: mul(870,477) = 414990 at position 12220
+Counted: mul(400,947) = 378800 at position 12234
+Counted: mul(477,716) = 341532 at position 12268
+Counted: mul(878,747) = 655866 at position 12294
+Counted: mul(304,943) = 286672 at position 12328
+Counted: mul(607,196) = 118972 at position 12340
+Counted: mul(60,976) = 58560 at position 12373
+Counted: mul(509,105) = 53445 at position 12394
+Counted: mul(346,669) = 231474 at position 12419
+Counted: mul(307,941) = 288887 at position 12464
+Counted: mul(752,22) = 16544 at position 12479
+Counted: mul(207,569) = 117783 at position 12492
+Counted: mul(311,222) = 69042 at position 12509
+Counted: mul(732,751) = 549732 at position 12559
+Counted: mul(385,364) = 140140 at position 12589
+Counted: mul(447,399) = 178353 at position 12623
+Counted: mul(190,685) = 130150 at position 12654
+Counted: mul(562,517) = 290554 at position 12674
+Counted: mul(276,16) = 4416 at position 12702
+Counted: mul(804,20) = 16080 at position 12713
+Counted: mul(88,726) = 63888 at position 12742
+Counted: mul(261,86) = 22446 at position 12777
+Counted: mul(845,611) = 516295 at position 12810
+Counted: mul(579,992) = 574368 at position 12824
+Skipped: mul(159,448) at position 12854
+Skipped: mul(493,878) at position 12874
+Skipped: mul(351,74) at position 12900
+Skipped: mul(13,152) at position 12914
+Skipped: mul(418,959) at position 12928
+Skipped: mul(929,190) at position 12953
+Skipped: mul(541,283) at position 12978
+Skipped: mul(998,260) at position 12992
+Skipped: mul(505,488) at position 13027
+Skipped: mul(435,756) at position 13039
+Skipped: mul(483,501) at position 13063
+Skipped: mul(614,830) at position 13087
+Skipped: mul(248,34) at position 13105
+Skipped: mul(620,74) at position 13143
+Skipped: mul(686,263) at position 13176
+Skipped: mul(363,968) at position 13204
+Skipped: mul(551,129) at position 13255
+Skipped: mul(543,78) at position 13272
+Skipped: mul(706,409) at position 13284
+Skipped: mul(673,839) at position 13330
+Skipped: mul(736,440) at position 13359
+Skipped: mul(747,892) at position 13382
+Skipped: mul(49,971) at position 13397
+Skipped: mul(383,914) at position 13422
+Skipped: mul(618,311) at position 13448
+Skipped: mul(502,765) at position 13482
+Skipped: mul(436,416) at position 13494
+Counted: mul(948,538) = 510024 at position 13571
+Counted: mul(162,290) = 46980 at position 13583
+Counted: mul(204,953) = 194412 at position 13636
+Counted: mul(596,5) = 2980 at position 13664
+Skipped: mul(663,381) at position 13719
+Skipped: mul(783,240) at position 13733
+Skipped: mul(498,504) at position 13766
+Skipped: mul(288,379) at position 13793
+Skipped: mul(448,663) at position 13809
+Skipped: mul(187,162) at position 13837
+Skipped: mul(349,790) at position 13878
+Skipped: mul(828,942) at position 13906
+Skipped: mul(806,221) at position 13926
+Skipped: mul(590,333) at position 13956
+Skipped: mul(503,476) at position 13970
+Skipped: mul(410,313) at position 13993
+Skipped: mul(139,541) at position 14027
+Counted: mul(738,394) = 290772 at position 14060
+Counted: mul(923,78) = 71994 at position 14076
+Counted: mul(698,308) = 214984 at position 14087
+Skipped: mul(240,291) at position 14159
+Skipped: mul(449,194) at position 14186
+Skipped: mul(784,976) at position 14221
+Skipped: mul(900,576) at position 14234
+Skipped: mul(887,550) at position 14254
+Skipped: mul(559,788) at position 14329
+Skipped: mul(842,508) at position 14341
+Skipped: mul(506,619) at position 14357
+Skipped: mul(290,401) at position 14373
+Skipped: mul(24,533) at position 14415
+Skipped: mul(185,238) at position 14434
+Skipped: mul(682,783) at position 14467
+Skipped: mul(851,586) at position 14495
+Skipped: mul(300,113) at position 14524
+Skipped: mul(940,699) at position 14539
+Skipped: mul(222,135) at position 14563
+Skipped: mul(789,51) at position 14592
+Skipped: mul(134,544) at position 14635
+Skipped: mul(592,830) at position 14648
+Skipped: mul(450,952) at position 14668
+Skipped: mul(491,815) at position 14702
+Skipped: mul(964,386) at position 14726
+Skipped: mul(216,877) at position 14745
+Skipped: mul(785,381) at position 14775
+Skipped: mul(751,11) at position 14806
+Skipped: mul(990,552) at position 14818
+Skipped: mul(847,756) at position 14843
+Skipped: mul(989,549) at position 14892
+Skipped: mul(128,819) at position 14906
+Skipped: mul(315,133) at position 14920
+Skipped: mul(658,119) at position 14969
+Skipped: mul(68,966) at position 14981
+Skipped: mul(542,35) at position 15001
+Skipped: mul(793,264) at position 15034
+Counted: mul(435,912) = 396720 at position 15076
+Counted: mul(319,351) = 111969 at position 15129
+Counted: mul(983,596) = 585868 at position 15147
+Counted: mul(958,131) = 125498 at position 15166
+Counted: mul(703,609) = 428127 at position 15195
+Counted: mul(757,8) = 6056 at position 15212
+Counted: mul(417,359) = 149703 at position 15225
+Counted: mul(871,898) = 782158 at position 15237
+Counted: mul(48,800) = 38400 at position 15269
+Counted: mul(42,556) = 23352 at position 15299
+Counted: mul(917,10) = 9170 at position 15320
+Counted: mul(332,621) = 206172 at position 15333
+Counted: mul(401,135) = 54135 at position 15350
+Counted: mul(151,674) = 101774 at position 15397
+Counted: mul(705,370) = 260850 at position 15440
+Counted: mul(708,933) = 660564 at position 15470
+Counted: mul(477,22) = 10494 at position 15489
+Counted: mul(123,436) = 53628 at position 15515
+Counted: mul(349,848) = 295952 at position 15550
+Counted: mul(790,264) = 208560 at position 15567
+Counted: mul(302,285) = 86070 at position 15581
+Counted: mul(610,447) = 272670 at position 15606
+Counted: mul(187,328) = 61336 at position 15619
+Counted: mul(645,764) = 492780 at position 15689
+Counted: mul(779,9) = 7011 at position 15718
+Counted: mul(901,432) = 389232 at position 15731
+Counted: mul(64,712) = 45568 at position 15755
+Skipped: mul(900,5) at position 15793
+Skipped: mul(267,404) at position 15813
+Skipped: mul(136,977) at position 15825
+Skipped: mul(465,853) at position 15841
+Skipped: mul(101,322) at position 15878
+Skipped: mul(113,205) at position 15912
+Skipped: mul(236,146) at position 15927
+Counted: mul(548,867) = 475116 at position 15994
+Counted: mul(775,563) = 436325 at position 16015
+Counted: mul(593,707) = 419251 at position 16048
+Counted: mul(786,814) = 639804 at position 16062
+Counted: mul(653,744) = 485832 at position 16082
+Counted: mul(545,436) = 237620 at position 16103
+Counted: mul(13,919) = 11947 at position 16140
+Skipped: mul(131,107) at position 16164
+Skipped: mul(233,301) at position 16176
+Skipped: mul(222,55) at position 16188
+Skipped: mul(84,569) at position 16225
+Skipped: mul(320,107) at position 16254
+Skipped: mul(939,432) at position 16278
+Skipped: mul(676,408) at position 16291
+Skipped: mul(529,923) at position 16305
+Skipped: mul(672,499) at position 16325
+Skipped: mul(798,10) at position 16351
+Skipped: mul(353,78) at position 16373
+Skipped: mul(55,622) at position 16432
+Skipped: mul(247,556) at position 16478
+Skipped: mul(82,430) at position 16507
+Skipped: mul(329,612) at position 16522
+Skipped: mul(620,232) at position 16542
+Skipped: mul(793,736) at position 16573
+Skipped: mul(740,679) at position 16587
+Skipped: mul(933,614) at position 16628
+Skipped: mul(223,909) at position 16641
+Skipped: mul(333,413) at position 16655
+Skipped: mul(268,324) at position 16667
+Skipped: mul(32,617) at position 16683
+Skipped: mul(828,783) at position 16714
+Skipped: mul(378,347) at position 16746
+Skipped: mul(139,917) at position 16761
+Skipped: mul(593,751) at position 16786
+Skipped: mul(859,230) at position 16819
+Skipped: mul(37,617) at position 16843
+Skipped: mul(656,373) at position 16870
+Skipped: mul(490,471) at position 16884
+Skipped: mul(145,899) at position 16916
+Counted: mul(818,520) = 425360 at position 16965
+Counted: mul(786,293) = 230298 at position 16981
+Counted: mul(207,241) = 49887 at position 17006
+Counted: mul(982,474) = 465468 at position 17025
+Counted: mul(202,531) = 107262 at position 17043
+Counted: mul(196,19) = 3724 at position 17080
+Counted: mul(600,831) = 498600 at position 17099
+Counted: mul(429,453) = 194337 at position 17128
+Counted: mul(113,738) = 83394 at position 17146
+Counted: mul(659,665) = 438235 at position 17178
+Counted: mul(779,45) = 35055 at position 17214
+Counted: mul(964,79) = 76156 at position 17225
+Counted: mul(454,704) = 319616 at position 17238
+Counted: mul(714,902) = 644028 at position 17256
+Counted: mul(678,277) = 187806 at position 17279
+Counted: mul(973,867) = 843591 at position 17304
+Counted: mul(994,517) = 513898 at position 17332
+Counted: mul(314,405) = 127170 at position 17354
+Counted: mul(84,778) = 65352 at position 17376
+Counted: mul(961,737) = 708257 at position 17402
+Skipped: mul(9,964) at position 17464
+Skipped: mul(788,711) at position 17498
+Skipped: mul(618,648) at position 17523
+Skipped: mul(622,99) at position 17536
+Skipped: mul(456,858) at position 17568
+Skipped: mul(691,120) at position 17595
+Skipped: mul(841,857) at position 17613
+Skipped: mul(792,885) at position 17625
+Skipped: mul(919,871) at position 17638
+Skipped: mul(829,758) at position 17658
+Counted: mul(655,175) = 114625 at position 17723
+Counted: mul(216,476) = 102816 at position 17757
+Counted: mul(611,263) = 160693 at position 17788
+Counted: mul(351,765) = 268515 at position 17819
+Counted: mul(469,471) = 220899 at position 17832
+Counted: mul(423,493) = 208539 at position 17867
+Counted: mul(66,973) = 64218 at position 17891
+Counted: mul(612,848) = 518976 at position 17926
+Counted: mul(527,124) = 65348 at position 17959
+Counted: mul(870,331) = 287970 at position 17983
+Counted: mul(130,565) = 73450 at position 17998
+Counted: mul(626,163) = 102038 at position 18026
+Counted: mul(153,137) = 20961 at position 18045
+Counted: mul(972,544) = 528768 at position 18070
+Skipped: mul(930,217) at position 18121
+Skipped: mul(241,121) at position 18142
+Skipped: mul(850,9) at position 18155
+Skipped: mul(821,737) at position 18202
+Skipped: mul(726,629) at position 18216
+Skipped: mul(556,762) at position 18244
+Skipped: mul(203,586) at position 18278
+Skipped: mul(888,510) at position 18291
+Skipped: mul(888,333) at position 18323
+Skipped: mul(432,395) at position 18339
+Skipped: mul(466,888) at position 18376
+Skipped: mul(967,260) at position 18396
+Skipped: mul(693,120) at position 18432
+Skipped: mul(281,907) at position 18461
+Skipped: mul(807,218) at position 18478
+Skipped: mul(773,151) at position 18513
+Skipped: mul(962,731) at position 18532
+Skipped: mul(944,522) at position 18564
+Skipped: mul(253,853) at position 18577
+Skipped: mul(434,54) at position 18613
+Skipped: mul(140,314) at position 18664
+Skipped: mul(494,983) at position 18700
+Counted: mul(803,959) = 770077 at position 18757
+Counted: mul(965,6) = 5790 at position 18779
+Counted: mul(333,629) = 209457 at position 18791
+Counted: mul(236,663) = 156468 at position 18820
+Counted: mul(697,758) = 528326 at position 18833
+Skipped: mul(273,693) at position 18853
+Skipped: mul(804,460) at position 18870
+Skipped: mul(306,557) at position 18889
+Skipped: mul(513,139) at position 18907
+Skipped: mul(16,588) at position 18921
+Skipped: mul(276,25) at position 18950
+Skipped: mul(160,563) at position 18976
+Skipped: mul(634,231) at position 18994
+Skipped: mul(907,336) at position 19029
+Skipped: mul(95,759) at position 19043
+Skipped: mul(795,493) at position 19109
+Skipped: mul(870,557) at position 19123
+Skipped: mul(206,920) at position 19136
+Skipped: mul(84,521) at position 19172
+Skipped: mul(585,984) at position 19198
+Skipped: mul(774,265) at position 19226
+Skipped: mul(21,934) at position 19246
+Skipped: mul(446,332) at position 19264
+Skipped: mul(353,42) at position 19323
+Skipped: mul(515,560) at position 19339
+Skipped: mul(341,643) at position 19367
+Skipped: mul(772,777) at position 19380
+Skipped: mul(780,58) at position 19422
+Skipped: mul(24,327) at position 19449
+Skipped: mul(53,613) at position 19491
+Skipped: mul(130,984) at position 19522
+Skipped: mul(634,685) at position 19538
+Counted: mul(835,113) = 94355 at position 19555
+Counted: mul(516,246) = 126936 at position 19581
+Counted: mul(866,121) = 104786 at position 19622
+Counted: mul(289,117) = 33813 at position 19636
+Counted: mul(494,764) = 377416 at position 19669
+Counted: mul(263,332) = 87316 at position 19699
+Counted: mul(470,641) = 301270 at position 19718
+Counted: mul(572,709) = 405548 at position 19733
+Counted: mul(189,623) = 117747 at position 19757
+Counted: mul(359,331) = 118829 at position 19770
+Counted: mul(908,32) = 29056 at position 19814
+
+Sum of valid multiplications: 92984032
