@@ -13,68 +13,63 @@ fn parse_line(line: &str) -> (i64, Vec<i64>) {
     (target, numbers)
 }
 
-fn can_make_target_part1(numbers: &[i64], target: i64) -> bool {
-    // For n numbers, we need n-1 operators
-    let num_ops = numbers.len() - 1;
-    let max_combinations = 1 << num_ops; // 2^(n-1) possible combinations
+fn try_combos_part1(numbers: &[i64], target: i64, index: usize, current_result: i64) -> bool {
+    // Base case: if we've used all numbers, check if we've reached the target
+    if index == numbers.len() {
+        return current_result == target;
+    }
 
-    // Try each possible combo
-    for combo in 0..max_combinations {
-        let mut result = numbers[0];
+    // If this is first number, start with it
+    if index == 0 {
+        return try_combos_part1(numbers, target, index + 1, numbers[0]);
+    }
 
-        // Use bits of combo to determine operators (0 = add, 1 = multiply)
-        for i in 0..num_ops {
-            let next_num = numbers[i + 1];
-            if (combo >> i) & 1 == 0 {
-                result += next_num;
-            } else {
-                result *= next_num;
-            }
-        }
+    // Try addition
+    if try_combos_part1(numbers, target, index + 1, current_result + numbers[index]) {
+        return true;
+    }
 
-        if result == target {
+    // Try multiplication
+    try_combos_part1(numbers, target, index + 1, current_result * numbers[index])
+}
+
+fn try_combos_part2(numbers: &[i64], target: i64, index: usize, current_result: i64) -> bool {
+    // Base case: if we've used all numbers, check if we've reached the target
+    if index == numbers.len() {
+        return current_result == target;
+    }
+
+    // If this is first number, start with it
+    if index == 0 {
+        return try_combos_part2(numbers, target, index + 1, numbers[0]);
+    }
+
+    // Try addition
+    if try_combos_part2(numbers, target, index + 1, current_result + numbers[index]) {
+        return true;
+    }
+
+    // Try multiplication
+    if try_combos_part2(numbers, target, index + 1, current_result * numbers[index]) {
+        return true;
+    }
+
+    // Try concatenation
+    let concat = format!("{}{}", current_result, numbers[index]);
+    if let Ok(concat_num) = concat.parse::<i64>() {
+        if try_combos_part2(numbers, target, index + 1, concat_num) {
             return true;
         }
     }
     false
 }
 
+fn can_make_target_part1(numbers: &[i64], target: i64) -> bool {
+    try_combos_part1(numbers, target, 0, 0)
+}
+
 fn can_make_target_part2(numbers: &[i64], target: i64) -> bool {
-    // For n numbers, we need n-1 operators
-    let num_ops = numbers.len() - 1;
-    let max_combinations = 1 << (2 * num_ops); // 3^(n-1) possible combinations
-
-    // Try each possible combo
-    for combo in 0..max_combinations {
-        let mut result = numbers[0];
-
-        // Use pairs of bits to determine operators (00 = add, 01 = multiply, 10 = concatenate)
-        for i in 0..num_ops {
-            let op = (combo >> (2 * i)) & 3; // Get 2 bits for this operator
-            let next_num = numbers[i + 1];
-
-            match op {
-                0 => result += next_num, // Addition
-                1 => result *= next_num, // Multiplication
-                2 => {
-                    // Concatenation
-                    let concat = format!("{}{}", result, next_num);
-                    if let Ok(concat_num) = concat.parse::<i64>() {
-                        result = concat_num;
-                    } else {
-                        // If concatenation would overflow, this combination is invalid
-                        break;
-                    }
-                }
-                _ => break, // Invalid operator, skip this combination
-            }
-        }
-
-        if result == target {
-            return true;
-        }
-    }
-    false
+    try_combos_part2(numbers, target, 0, 0)
 }
 
 fn main() {
