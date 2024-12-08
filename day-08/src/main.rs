@@ -74,9 +74,14 @@ fn find_antinodes(
         return valid_antinodes;
     }
 
-    // Calculate antinode positions
-    let antinode1 = (x1 - dx, y1 - dy);
-    let antinode2 = (x2 + dx, y2 + dy);
+    // Calculate antinode positions for 2:1 ratio
+    let antinode1 = (
+        x1 - dx / 2, // Halfway between p1 and where the original antinode would have been
+        y1 - dy / 2,
+    );
+
+    // For point p2 being closer
+    let antinode2 = (x2 + dx / 2, y2 + dy / 2);
 
     // Check first antinode
     if is_within_grid(antinode1.0, antinode1.1) {
@@ -189,21 +194,32 @@ fn main() {
         }
     }
 
-    // Show overlap summary
-    println!("\nNode Overlap Summary:");
-    let overlaps = count_node_overlaps(&nodes, &grid);
-    let total_overlaps: usize = overlaps.iter().map(|o| o.count).sum();
+    // Collect unique locations where antinodes overlap with different characters
+    let mut unique_overlap_locations: std::collections::HashSet<(usize, usize)> =
+        std::collections::HashSet::new();
 
-    for overlap in &overlaps {
-        println!(
-            "Antinode from '{}' overlaps with '{}' at position ({}, {}) {} times",
-            overlap.antinode_source_char,
-            overlap.node_char,
-            overlap.position.0,
-            overlap.position.1,
-            overlap.count
-        );
+    for node in &nodes {
+        if node.positions.len() > 1 {
+            let antinodes = find_all_valid_antinodes(node, &grid);
+            for antinode in antinodes {
+                if let Some(overlapping_char) = antinode.overlapping_char {
+                    if overlapping_char != node.character {
+                        // Only count when antinode overlaps with a different character
+                        unique_overlap_locations.insert(antinode.antinode);
+                    }
+                }
+            }
+        }
     }
 
-    println!("\nTotal overlaps: {}", total_overlaps);
+    println!(
+        "\nUnique locations where antinodes overlap with different characters: {}",
+        unique_overlap_locations.len()
+    );
+
+    // Optional: Print all unique overlap locations
+    println!("\nAll unique overlap locations:");
+    for pos in &unique_overlap_locations {
+        println!("  Position: ({}, {})", pos.0, pos.1);
+    }
 }
