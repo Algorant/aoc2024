@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs::read_to_string;
 
 // Grid Size
@@ -65,7 +65,7 @@ fn find_antinodes(
 
     let mut valid_antinodes = Vec::new();
 
-    // Calculate vector between points
+    // Calculate diff vector: pos2 - pos1
     let dx = x2 - x1;
     let dy = y2 - y1;
 
@@ -74,14 +74,18 @@ fn find_antinodes(
         return valid_antinodes;
     }
 
-    // Calculate antinode positions for 2:1 ratio
+    // Calculate antinode positions using the formula:
+    // an1 := pos1 - diff
+    // an2 := pos2 + diff
     let antinode1 = (
-        x1 - dx / 2, // Halfway between p1 and where the original antinode would have been
-        y1 - dy / 2,
+        x1 - dx, // pos1 - diff
+        y1 - dy,
     );
 
-    // For point p2 being closer
-    let antinode2 = (x2 + dx / 2, y2 + dy / 2);
+    let antinode2 = (
+        x2 + dx, // pos2 + diff
+        y2 + dy,
+    );
 
     // Check first antinode
     if is_within_grid(antinode1.0, antinode1.1) {
@@ -155,6 +159,55 @@ fn count_node_overlaps(nodes: &[NodePositions], grid: &Vec<Vec<char>>) -> Vec<No
         .collect()
 }
 
+// Part 2 function
+fn find_line_antinodes(
+    p1: (usize, usize),
+    p2: (usize, usize),
+    grid: &Vec<Vec<char>>,
+) -> Vec<(usize, usize)> {
+    let (x1, y1) = (p1.0 as i32, p1.1 as i32);
+    let (x2, y2) = (p2.0 as i32, p2.1 as i32);
+    let mut antinodes = Vec::new();
+
+    // Calculate direction vector
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+
+    if dx == 0 && dy == 0 {
+        return antinodes;
+    }
+
+    // Include the points themselves as they are now antinodes
+    antinodes.push(p1);
+    antinodes.push(p2);
+
+    // Extend line in both direction until grid boundaries
+    let mut t = 1;
+    // Forward direction
+    loop {
+        let x = x2 + dx * t;
+        let y = y2 + dy * t;
+        if !is_within_grid(x, y) {
+            break;
+        }
+        antinodes.push((x as usize, y as usize));
+        t += 1;
+    }
+
+    // Backwards
+    let mut t = 1;
+    loop {
+        let x = x1 - dx * t;
+        let y = y1 - dy * t;
+        if !is_within_grid(x, y) {
+            break;
+        }
+        antinodes.push((x as usize, y as usize));
+        t += 1;
+    }
+    antinodes
+}
+
 fn main() {
     let input = read_to_string("input.txt").expect("Failed to read input.txt");
 
@@ -194,32 +247,52 @@ fn main() {
         }
     }
 
-    // Collect unique locations where antinodes overlap with different characters
-    let mut unique_overlap_locations: std::collections::HashSet<(usize, usize)> =
+    // Collect all unique antinode locations
+    let mut unique_antinode_locations: std::collections::HashSet<(usize, usize)> =
         std::collections::HashSet::new();
 
     for node in &nodes {
         if node.positions.len() > 1 {
             let antinodes = find_all_valid_antinodes(node, &grid);
             for antinode in antinodes {
-                if let Some(overlapping_char) = antinode.overlapping_char {
-                    if overlapping_char != node.character {
-                        // Only count when antinode overlaps with a different character
-                        unique_overlap_locations.insert(antinode.antinode);
-                    }
+                // Add every valid antinode position, regardless of overlaps
+                unique_antinode_locations.insert(antinode.antinode);
+            }
+        }
+    }
+
+    println!(
+        "\nPart 1 - Total number of unique antinode locations: {}",
+        unique_antinode_locations.len()
+    );
+
+    // Part 2 print
+    let mut all_line_antinodes: HashSet<(usize, usize)> = HashSet::new();
+
+    for node in &nodes {
+        if node.positions.len() > 1 {
+            for i in 0..node.positions.len() {
+                for j in i + 1..node.positions.len() {
+                    let line_points =
+                        find_line_antinodes(node.positions[i], node.positions[j], &grid);
+                    all_line_antinodes.extend(line_points);
                 }
             }
         }
     }
 
     println!(
-        "\nUnique locations where antinodes overlap with different characters: {}",
-        unique_overlap_locations.len()
+        "\nPart 2: Total number of antinode locations along lines: {}",
+        all_line_antinodes.len()
     );
 
-    // Optional: Print all unique overlap locations
-    println!("\nAll unique overlap locations:");
-    for pos in &unique_overlap_locations {
-        println!("  Position: ({}, {})", pos.0, pos.1);
-    }
+    // Optional: Print all unique antinode locations (sorted)
+    //println!("\nAll unique antinode locations (sorted):");
+    //let mut sorted_locations: Vec<_> = unique_antinode_locations.into_iter().collect();
+    //sorted_locations.sort_by(|a, b| {
+    //    a.0.cmp(&b.0).then(a.1.cmp(&b.1)) // Sort by row first, then by column
+    //});
+    //for pos in &sorted_locations {
+    //    println!("  Position: ({}, {})", pos.0, pos.1);
+    //}
 }
