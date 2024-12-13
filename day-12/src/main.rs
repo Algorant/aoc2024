@@ -92,83 +92,97 @@ fn find_perimeter(region: &Region, grid: &Vec<Vec<char>>) -> usize {
 
 // Part 2
 fn count_distinct_sides(region: &Region, grid: &Vec<Vec<char>>) -> usize {
-    let mut distinct_sides = 0;
-    let mut horizontal_edges = HashSet::new();
-    let mut vertical_edges = HashSet::new();
+    let mut horizontal_segments = HashSet::new();
+    let mut vertical_segments = HashSet::new();
 
-    // For each position in the region
     for &(row, col) in &region.positions {
-        // Check horizontal edges (top and bottom)
-        // Top edge
+        // Check top edge
         if !region.positions.contains(&(row.wrapping_sub(1), col)) {
-            if !horizontal_edges.contains(&(row, col)) {
-                let mut current_col = col;
-                // Find the full length of this horizontal edge
-                while current_col < grid[0].len()
-                    && region.positions.contains(&(row, current_col))
-                    && !region
-                        .positions
-                        .contains(&(row.wrapping_sub(1), current_col))
-                {
-                    horizontal_edges.insert((row, current_col));
-                    current_col += 1;
-                }
-                distinct_sides += 1;
+            let mut start_col = col;
+            while start_col > 0
+                && region.positions.contains(&(row, start_col - 1))
+                && !region
+                    .positions
+                    .contains(&(row.wrapping_sub(1), start_col - 1))
+            {
+                start_col -= 1;
             }
+            let mut end_col = col;
+            while end_col < grid[0].len() - 1
+                && region.positions.contains(&(row, end_col + 1))
+                && !region
+                    .positions
+                    .contains(&(row.wrapping_sub(1), end_col + 1))
+            {
+                end_col += 1;
+            }
+            horizontal_segments.insert((row, start_col, end_col));
         }
 
-        // Bottom edge
+        // Check bottom edge
         if row + 1 >= grid.len() || !region.positions.contains(&(row + 1, col)) {
-            if !horizontal_edges.contains(&(row + 1, col)) {
-                let mut current_col = col;
-                while current_col < grid[0].len()
-                    && region.positions.contains(&(row, current_col))
-                    && (row + 1 >= grid.len()
-                        || !region.positions.contains(&(row + 1, current_col)))
-                {
-                    horizontal_edges.insert((row + 1, current_col));
-                    current_col += 1;
-                }
-                distinct_sides += 1;
+            let mut start_col = col;
+            while start_col > 0
+                && region.positions.contains(&(row, start_col - 1))
+                && (row + 1 >= grid.len() || !region.positions.contains(&(row + 1, start_col - 1)))
+            {
+                start_col -= 1;
             }
+            let mut end_col = col;
+            while end_col < grid[0].len() - 1
+                && region.positions.contains(&(row, end_col + 1))
+                && (row + 1 >= grid.len() || !region.positions.contains(&(row + 1, end_col + 1)))
+            {
+                end_col += 1;
+            }
+            horizontal_segments.insert((row + 1, start_col, end_col));
         }
 
-        // Check vertical edges (left and right)
-        // Left edge
+        // Check left edge
         if !region.positions.contains(&(row, col.wrapping_sub(1))) {
-            if !vertical_edges.contains(&(row, col)) {
-                let mut current_row = row;
-                while current_row < grid.len()
-                    && region.positions.contains(&(current_row, col))
-                    && !region
-                        .positions
-                        .contains(&(current_row, col.wrapping_sub(1)))
-                {
-                    vertical_edges.insert((current_row, col));
-                    current_row += 1;
-                }
-                distinct_sides += 1;
+            let mut start_row = row;
+            while start_row > 0
+                && region.positions.contains(&(start_row - 1, col))
+                && !region
+                    .positions
+                    .contains(&(start_row - 1, col.wrapping_sub(1)))
+            {
+                start_row -= 1;
             }
+            let mut end_row = row;
+            while end_row < grid.len() - 1
+                && region.positions.contains(&(end_row + 1, col))
+                && !region
+                    .positions
+                    .contains(&(end_row + 1, col.wrapping_sub(1)))
+            {
+                end_row += 1;
+            }
+            vertical_segments.insert((col, start_row, end_row));
         }
 
-        // Right edge
+        // Check right edge
         if col + 1 >= grid[0].len() || !region.positions.contains(&(row, col + 1)) {
-            if !vertical_edges.contains(&(row, col + 1)) {
-                let mut current_row = row;
-                while current_row < grid.len()
-                    && region.positions.contains(&(current_row, col))
-                    && (col + 1 >= grid[0].len()
-                        || !region.positions.contains(&(current_row, col + 1)))
-                {
-                    vertical_edges.insert((current_row, col + 1));
-                    current_row += 1;
-                }
-                distinct_sides += 1;
+            let mut start_row = row;
+            while start_row > 0
+                && region.positions.contains(&(start_row - 1, col))
+                && (col + 1 >= grid[0].len()
+                    || !region.positions.contains(&(start_row - 1, col + 1)))
+            {
+                start_row -= 1;
             }
+            let mut end_row = row;
+            while end_row < grid.len() - 1
+                && region.positions.contains(&(end_row + 1, col))
+                && (col + 1 >= grid[0].len() || !region.positions.contains(&(end_row + 1, col + 1)))
+            {
+                end_row += 1;
+            }
+            vertical_segments.insert((col + 1, start_row, end_row));
         }
     }
 
-    distinct_sides
+    horizontal_segments.len() + vertical_segments.len()
 }
 
 fn main() {
