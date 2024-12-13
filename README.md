@@ -16,3 +16,6 @@ I will be writing them in [Rust](https://www.rust-lang.org/).
 - [Day 8](day-08/)
 - [Day 9](day-09/)
 - [Day 10](day-10/)
+- [Day 11](day-11/)
+- [Day 12](day-12/)
+- [Day 13](day-13/)
