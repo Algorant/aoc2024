@@ -90,10 +90,86 @@ fn find_perimeter(region: &Region, grid: &Vec<Vec<char>>) -> usize {
     perimiter
 }
 
-// Area is defined as the number of tiles in a region.
+// Part 2
+fn count_distinct_sides(region: &Region, grid: &Vec<Vec<char>>) -> usize {
+    let mut distinct_sides = 0;
+    let mut horizontal_edges = HashSet::new();
+    let mut vertical_edges = HashSet::new();
 
-// Perimiter is defined as the number of sides of a tile
-// not connected to the same type of tile in a region.
+    // For each position in the region
+    for &(row, col) in &region.positions {
+        // Check horizontal edges (top and bottom)
+        // Top edge
+        if !region.positions.contains(&(row.wrapping_sub(1), col)) {
+            if !horizontal_edges.contains(&(row, col)) {
+                let mut current_col = col;
+                // Find the full length of this horizontal edge
+                while current_col < grid[0].len()
+                    && region.positions.contains(&(row, current_col))
+                    && !region
+                        .positions
+                        .contains(&(row.wrapping_sub(1), current_col))
+                {
+                    horizontal_edges.insert((row, current_col));
+                    current_col += 1;
+                }
+                distinct_sides += 1;
+            }
+        }
+
+        // Bottom edge
+        if row + 1 >= grid.len() || !region.positions.contains(&(row + 1, col)) {
+            if !horizontal_edges.contains(&(row + 1, col)) {
+                let mut current_col = col;
+                while current_col < grid[0].len()
+                    && region.positions.contains(&(row, current_col))
+                    && (row + 1 >= grid.len()
+                        || !region.positions.contains(&(row + 1, current_col)))
+                {
+                    horizontal_edges.insert((row + 1, current_col));
+                    current_col += 1;
+                }
+                distinct_sides += 1;
+            }
+        }
+
+        // Check vertical edges (left and right)
+        // Left edge
+        if !region.positions.contains(&(row, col.wrapping_sub(1))) {
+            if !vertical_edges.contains(&(row, col)) {
+                let mut current_row = row;
+                while current_row < grid.len()
+                    && region.positions.contains(&(current_row, col))
+                    && !region
+                        .positions
+                        .contains(&(current_row, col.wrapping_sub(1)))
+                {
+                    vertical_edges.insert((current_row, col));
+                    current_row += 1;
+                }
+                distinct_sides += 1;
+            }
+        }
+
+        // Right edge
+        if col + 1 >= grid[0].len() || !region.positions.contains(&(row, col + 1)) {
+            if !vertical_edges.contains(&(row, col + 1)) {
+                let mut current_row = row;
+                while current_row < grid.len()
+                    && region.positions.contains(&(current_row, col))
+                    && (col + 1 >= grid[0].len()
+                        || !region.positions.contains(&(current_row, col + 1)))
+                {
+                    vertical_edges.insert((current_row, col + 1));
+                    current_row += 1;
+                }
+                distinct_sides += 1;
+            }
+        }
+    }
+
+    distinct_sides
+}
 
 fn main() {
     let input = read_to_string("input.txt").unwrap();
@@ -102,15 +178,16 @@ fn main() {
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let regions = find_regions(&grid);
 
-    // Print information about each region
-    let total_sum: usize = regions
+    // Print information about each region and calculate both parts
+    let (part1_sum, part2_sum): (usize, usize) = regions
         .iter()
         .map(|region| {
             let perimeter = find_perimeter(region, &grid);
             let area = region.positions.len();
+            let distinct_sides = count_distinct_sides(region, &grid);
 
             println!(
-                "Region {} - Letter: {}, Area: {} tiles, Perimeter: {} Sides",
+                "Region {} - Letter: {}, Area: {} tiles, Perimeter: {} sides, Distinct sides: {}",
                 regions
                     .iter()
                     .position(|r| r.letter == region.letter)
@@ -118,11 +195,19 @@ fn main() {
                     + 1,
                 region.letter,
                 area,
-                perimeter
+                perimeter,
+                distinct_sides
             );
-            area * perimeter
+            (area * perimeter, area * distinct_sides)
         })
-        .sum();
+        .fold((0, 0), |acc, (p1, p2)| (acc.0 + p1, acc.1 + p2));
 
-    println!("\nSum of all regions' (area * perimeter): {}", total_sum);
+    println!(
+        "\nPart 1 - Sum of all regions' (area * perimeter): {}",
+        part1_sum
+    );
+    println!(
+        "Part 2 - Sum of all regions' (area * distinct sides): {}",
+        part2_sum
+    );
 }
