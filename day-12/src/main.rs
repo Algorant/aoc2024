@@ -64,6 +64,32 @@ fn find_regions(grid: &Vec<Vec<char>>) -> Vec<Region> {
     regions
 }
 
+fn find_perimeter(region: &Region, grid: &Vec<Vec<char>>) -> usize {
+    let mut perimiter = 0;
+
+    for &(row, col) in &region.positions {
+        // Check all 4 sides of each position
+        let directions = [
+            (row.wrapping_sub(1), col),
+            (row, col + 1),
+            (row + 1, col),
+            (row, col.wrapping_sub(1)),
+        ];
+
+        for (next_row, next_col) in directions {
+            // A side counts if it is on the edge of the grid
+            // or the adjacent cell is not part of the region
+            if next_row >= grid.len()
+                || next_col >= grid[0].len()
+                || !region.positions.contains(&(next_row, next_col))
+            {
+                perimiter += 1;
+            }
+        }
+    }
+    perimiter
+}
+
 // Area is defined as the number of tiles in a region.
 
 // Perimiter is defined as the number of sides of a tile
@@ -74,16 +100,29 @@ fn main() {
 
     // Convert to grid
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
-
     let regions = find_regions(&grid);
 
     // Print information about each region
-    for (i, region) in regions.iter().enumerate() {
-        println!(
-            "Region {} - Letter: {}, Size: {} tiles",
-            i + 1,
-            region.letter,
-            region.positions.len()
-        );
-    }
+    let total_sum: usize = regions
+        .iter()
+        .map(|region| {
+            let perimeter = find_perimeter(region, &grid);
+            let area = region.positions.len();
+
+            println!(
+                "Region {} - Letter: {}, Area: {} tiles, Perimeter: {} Sides",
+                regions
+                    .iter()
+                    .position(|r| r.letter == region.letter)
+                    .unwrap()
+                    + 1,
+                region.letter,
+                area,
+                perimeter
+            );
+            area * perimeter
+        })
+        .sum();
+
+    println!("\nSum of all regions' (area * perimeter): {}", total_sum);
 }
