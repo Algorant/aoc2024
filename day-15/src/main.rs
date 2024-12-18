@@ -19,6 +19,25 @@ struct Grid {
 }
 
 impl Grid {
+    fn double_map(input: &str) -> String {
+        let mut result = String::new();
+        for line in input.lines() {
+            let mut new_line = String::new();
+            for ch in line.chars() {
+                match ch {
+                    '#' => new_line.push_str("##"),
+                    'O' => new_line.push_str("[]"),
+                    '.' => new_line.push_str(".."),
+                    '@' => new_line.push_str("@."),
+                    _ => new_line.push_str("  "), // Handle any unexpected characters
+                }
+            }
+            result.push_str(&new_line);
+            result.push('\n');
+        }
+        result
+    }
+
     fn new(input: &str) -> Self {
         let mut cells = Vec::new();
         let mut robot_pos = (0, 0);
@@ -28,11 +47,7 @@ impl Grid {
             panic!("Input is empty!");
         }
 
-        println!("Parsing map with {} lines", input.lines().count());
-        println!("First line of input: {:?}", input.lines().next().unwrap());
-
         for (y, line) in input.lines().enumerate() {
-            //println!("Line {}: length={}", y, line.len());
             let mut row = Vec::new();
             for (x, ch) in line.chars().enumerate() {
                 let cell = match ch {
@@ -43,14 +58,10 @@ impl Grid {
                         Cell::Rock
                     }
                     '@' => {
-                        println!("Found robot at position ({}, {})", x, y);
                         robot_pos = (x, y);
                         Cell::Robot
                     }
-                    _ => {
-                        println!("Found unexpected character '{}' at ({}, {})", ch, x, y);
-                        Cell::Empty
-                    }
+                    _ => Cell::Empty,
                 };
                 row.push(cell);
             }
@@ -59,10 +70,6 @@ impl Grid {
 
         let height = cells.len();
         let width = cells.get(0).map_or(0, |row| row.len());
-
-        println!("Grid dimensions: {}x{}", width, height);
-        println!("Number of rocks: {}", rocks.len());
-        println!("Robot position: {:?}", robot_pos);
 
         Grid {
             cells,
@@ -123,11 +130,7 @@ impl Grid {
                 }
 
                 // Check if we can move all rocks (space after last rock is empty)
-                println!(
-                    "Attempting to move {} rocks in direction {}",
-                    rocks_to_move.len(),
-                    direction
-                );
+
                 if self.cells[curr_y][curr_x] == Cell::Empty {
                     // Move all rocks one position in the direction
                     for &(rock_x, rock_y) in rocks_to_move.iter().rev() {
@@ -190,17 +193,8 @@ impl Grid {
 
     fn execute_moves(&mut self, moves: &str) {
         for direction in moves.chars().filter(|c| !c.is_whitespace()) {
-            match direction {
-                '<' | '>' | '^' | 'v' => {
-                    let moved = self.move_robot(direction);
-                    if !moved {
-                        println!("Could not move in direction: {}", direction);
-                    }
-                    if !self.verify_grid_state() {
-                        panic!("Grid state verification failed after moving {}", direction);
-                    }
-                }
-                _ => println!("Skipping invalid direction: {}", direction),
+            if matches!(direction, '<' | '>' | '^' | 'v') {
+                self.move_robot(direction);
             }
         }
     }
@@ -238,26 +232,9 @@ fn main() {
     let map_str = read_to_string("map.txt").expect("Failed to read map file");
     let moves = read_to_string("movements.txt").expect("Failed to read movement file");
 
-    println!(
-        "First few moves: {:?}",
-        moves.trim().chars().take(10).collect::<String>()
-    );
-
     let mut grid = Grid::new(&map_str);
-
-    // Print initial state
-    println!("Initial robot position: {:?}", grid.robot_pos);
-    println!("Initial number of rocks: {}", grid.rocks.len());
-    println!("\nInitial grid state:");
-    grid.print_grid();
 
     grid.execute_moves(&moves.trim());
 
-    println!("\nFinal grid state:");
-    grid.print_grid();
-
-    println!("Final robot position: {:?}", grid.robot_pos);
-    println!("Final number of rocks: {}", grid.rocks.len());
-    println!("Final rock positions: {:?}", grid.get_rock_positions());
     println!("Total score: {}", grid.calculate_score());
 }
