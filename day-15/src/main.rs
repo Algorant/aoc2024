@@ -232,9 +232,30 @@ fn main() {
     let map_str = read_to_string("map.txt").expect("Failed to read map file");
     let moves = read_to_string("movements.txt").expect("Failed to read movement file");
 
+    // Part 1
+    println!("Part 1:");
+    println!("=======");
+    println!("Original grid:");
     let mut grid = Grid::new(&map_str);
-
+    println!(
+        "Robot starting position: ({}, {})",
+        grid.robot_pos.0, grid.robot_pos.1
+    );
+    grid.print_grid();
     grid.execute_moves(&moves.trim());
+    println!("Part 1 Total score: {}", grid.calculate_score());
 
-    println!("Total score: {}", grid.calculate_score());
+    // Part 2
+    println!("\nPart 2:");
+    println!("=======");
+    println!("Doubled grid:");
+    let doubled_map = Grid::double_map(&map_str);
+    println!("{}", doubled_map);
+
+    // Create a Grid from the doubled map to find robot position
+    let doubled_grid = Grid::new(&doubled_map);
+    println!(
+        "Robot position in doubled grid: ({}, {})",
+        doubled_grid.robot_pos.0, doubled_grid.robot_pos.1
+    );
 }
