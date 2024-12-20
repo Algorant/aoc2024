@@ -1,261 +1,230 @@
-use std::collections::HashSet;
-use std::fs::read_to_string;
+use itertools::Itertools;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Cell {
-    Empty,
-    Wall,
-    Rock,
-    Robot,
+enum Instruction {
+    Up,
+    Down,
+    Left,
+    Right,
 }
 
-#[derive(Debug, Clone)]
-struct Grid {
-    cells: Vec<Vec<Cell>>,
-    robot_pos: (usize, usize),
-    rocks: HashSet<(usize, usize)>,
-    width: usize,
-    height: usize,
-}
-
-impl Grid {
-    fn double_map(input: &str) -> String {
-        let mut result = String::new();
-        for line in input.lines() {
-            let mut new_line = String::new();
-            for ch in line.chars() {
-                match ch {
-                    '#' => new_line.push_str("##"),
-                    'O' => new_line.push_str("[]"),
-                    '.' => new_line.push_str(".."),
-                    '@' => new_line.push_str("@."),
-                    _ => new_line.push_str("  "), // Handle any unexpected characters
-                }
-            }
-            result.push_str(&new_line);
-            result.push('\n');
+impl From<char> for Instruction {
+    fn from(c: char) -> Self {
+        match c {
+            '^' => Instruction::Up,
+            'v' => Instruction::Down,
+            '<' => Instruction::Left,
+            '>' => Instruction::Right,
+            _ => unreachable!(),
         }
-        result
     }
+}
 
+impl Instruction {
+    fn apply(&self, x: usize, y: usize) -> (usize, usize) {
+        match self {
+            Instruction::Up => (x, y - 1),
+            Instruction::Down => (x, y + 1),
+            Instruction::Left => (x - 1, y),
+            Instruction::Right => (x + 1, y),
+        }
+    }
+}
+
+#[derive(Debug)]
+struct Map {
+    map: Vec<Vec<char>>,
+    robot: (usize, usize),
+}
+
+impl Map {
     fn new(input: &str) -> Self {
-        let mut cells = Vec::new();
-        let mut robot_pos = (0, 0);
-        let mut rocks = HashSet::new();
-
-        if input.trim().is_empty() {
-            panic!("Input is empty!");
-        }
-
+        // For the normal sized map in p1, we simply push values and find the
+        // robot.
+        let mut map = vec![];
+        let mut robot = (0, 0);
         for (y, line) in input.lines().enumerate() {
-            let mut row = Vec::new();
-            for (x, ch) in line.chars().enumerate() {
-                let cell = match ch {
-                    '.' => Cell::Empty,
-                    '#' => Cell::Wall,
-                    'O' => {
-                        rocks.insert((x, y));
-                        Cell::Rock
-                    }
-                    '@' => {
-                        robot_pos = (x, y);
-                        Cell::Robot
-                    }
-                    _ => Cell::Empty,
-                };
-                row.push(cell);
+            map.push(vec![]);
+            for (x, c) in line.chars().enumerate() {
+                map[y].push(c);
+                if c == '@' {
+                    robot = (x, y);
+                }
             }
-            cells.push(row);
         }
-
-        let height = cells.len();
-        let width = cells.get(0).map_or(0, |row| row.len());
-
-        Grid {
-            cells,
-            robot_pos,
-            rocks,
-            width,
-            height,
-        }
+        Map { map, robot }
     }
 
-    fn move_robot(&mut self, direction: char) -> bool {
-        let (dx, dy) = match direction {
-            '<' => (-1, 0),
-            '>' => (1, 0),
-            '^' => (0, -1),
-            'v' => (0, 1),
-            _ => panic!("Invalid direction: {}", direction),
-        };
-
-        let (x, y) = self.robot_pos;
-        let new_x = (x as i32 + dx) as usize;
-        let new_y = (y as i32 + dy) as usize;
-
-        // Check Bounds
-        if new_x >= self.width || new_y >= self.height {
-            return false;
-        }
-
-        match self.cells[new_y][new_x] {
-            Cell::Empty => {
-                self.cells[y][x] = Cell::Empty;
-                self.cells[new_y][new_x] = Cell::Robot;
-                self.robot_pos = (new_x, new_y);
-                true
-            }
-            Cell::Rock => {
-                // Find all consecutive rocks and the first non-rock cell
-                let mut rocks_to_move = Vec::new();
-                let mut curr_x = new_x;
-                let mut curr_y = new_y;
-
-                loop {
-                    if self.cells[curr_y][curr_x] == Cell::Rock {
-                        rocks_to_move.push((curr_x, curr_y));
-                        let next_x = (curr_x as i32 + dx) as usize;
-                        let next_y = (curr_y as i32 + dy) as usize;
-
-                        if next_x >= self.width || next_y >= self.height {
-                            return false;
-                        }
-                        curr_x = next_x;
-                        curr_y = next_y;
-                    } else if self.cells[curr_y][curr_x] == Cell::Wall {
-                        return false; // Stop if we hit a wall
-                    } else {
-                        break; // Break if we hit empty space
-                    }
-                }
-
-                // Check if we can move all rocks (space after last rock is empty)
-
-                if self.cells[curr_y][curr_x] == Cell::Empty {
-                    // Move all rocks one position in the direction
-                    for &(rock_x, rock_y) in rocks_to_move.iter().rev() {
-                        let new_rock_x = (rock_x as i32 + dx) as usize;
-                        let new_rock_y = (rock_y as i32 + dy) as usize;
-
-                        // Verify the rock is still where we expect it
-                        if self.cells[rock_y][rock_x] != Cell::Rock {
-                            continue; // Skip if rock is no longer here
-                        }
-
-                        self.cells[rock_y][rock_x] = Cell::Empty;
-                        self.cells[new_rock_y][new_rock_x] = Cell::Rock;
-
-                        // Update the rocks set
-                        if self.rocks.remove(&(rock_x, rock_y)) {
-                            self.rocks.insert((new_rock_x, new_rock_y));
-                        }
-                    }
-
-                    // Move robot
-                    self.cells[y][x] = Cell::Empty;
-                    self.cells[new_y][new_x] = Cell::Robot;
-
-                    self.robot_pos = (new_x, new_y);
-
-                    true
+    fn new_wide(input: &str) -> Self {
+        // For the wide map in p2, we'll be pushing two characters per cell.
+        let mut map = vec![];
+        let mut robot = (0, 0);
+        for (y, line) in input.lines().enumerate() {
+            map.push(vec![]);
+            for (x, c) in line.chars().enumerate() {
+                if c == 'O' {
+                    map[y].push('[');
+                    map[y].push(']');
+                } else if c == '@' {
+                    // Note the x position of the robot is doubled because we
+                    // have two characters per cell.
+                    map[y].push('@');
+                    map[y].push('.');
+                    robot = (x * 2, y);
                 } else {
-                    false
+                    map[y].push(c);
+                    map[y].push(c);
                 }
             }
-            Cell::Wall => false,
-            Cell::Robot => false, // Can't move into a cell with another robot
+        }
+        Map { map, robot }
+    }
+
+    fn apply_all(&mut self, instructions: &[Instruction]) {
+        instructions.iter().for_each(|instruction| {
+            self.apply(instruction);
+        });
+    }
+
+    fn apply(&mut self, instruction: &Instruction) {
+        // Get the new position of the robot. and our next position.
+        let (x, y) = self.robot;
+        let (new_x, new_y) = instruction.apply(x, y);
+
+        // Do some base case checks.
+        if self.map[new_y][new_x] == '#' {
+            // We reached a wall.
+            return;
+        } else if self.map[new_y][new_x] == '.' {
+            // we can simply move there.
+            self.map[y][x] = '.';
+            self.map[new_y][new_x] = '@';
+            self.robot = (new_x, new_y);
+            return;
+        }
+
+        // Try to recursively shift the boxes.
+        self.shift(new_x, new_y, instruction);
+
+        // See if the shift worked and we can now move.
+        if self.map[new_y][new_x] == '.' {
+            self.map[y][x] = '.';
+            self.map[new_y][new_x] = '@';
+            self.robot = (new_x, new_y);
         }
     }
 
-    fn verify_grid_state(&self) -> bool {
-        let mut rock_count = 0;
-        for y in 0..self.height {
-            for x in 0..self.width {
-                if self.cells[y][x] == Cell::Rock {
-                    rock_count += 1;
-                    if !self.rocks.contains(&(x, y)) {
-                        println!("Rock at ({}, {}) not in rocks set!", x, y);
-                        return false;
+    fn shift(&mut self, x: usize, y: usize, instruction: &Instruction) {
+        // We are at a box now. Let's see if we can move it and all other boxes
+        // in that can move with it.
+        if let Some(moves) = self.can_move(x, y, instruction) {
+            let moves = moves.into_iter().unique().collect::<Vec<_>>();
+            for (x, y) in moves {
+                let (new_x, new_y) = instruction.apply(x, y);
+                (self.map[y][x], self.map[new_y][new_x]) = (self.map[new_y][new_x], self.map[y][x]);
+            }
+        }
+    }
+
+    fn can_move(
+        &self,
+        x: usize,
+        y: usize,
+        instruction: &Instruction,
+    ) -> Option<Vec<(usize, usize)>> {
+        // Get the position of the place I need to move.
+        let (new_x, new_y) = instruction.apply(x, y);
+
+        // Check for another part of the box (p2).
+        let other = match (self.map[y][x], instruction) {
+            ('[', Instruction::Up | Instruction::Down) => Some((x + 1, y)),
+            (']', Instruction::Up | Instruction::Down) => Some((x - 1, y)),
+            _ => None,
+        };
+        let other_new = other.map(|(x, y)| instruction.apply(x, y));
+
+        // Do some base case checks.
+        match (self.map[new_y][new_x], other, other_new) {
+            // Do we hit a wall?
+            ('#', _, _) => return None,
+            (_, _, Some((x, y))) if self.map[y][x] == '#' => return None,
+
+            // Are we free to move?
+            ('.', _, None) => return Some(vec![(x, y)]),
+            ('.', Some((other_x, other_y)), Some((other_new_x, other_new_y)))
+                if self.map[other_new_y][other_new_x] == '.' =>
+            {
+                return Some(vec![(x, y), (other_x, other_y)])
+            }
+
+            _ => (),
+        }
+
+        // At this point, we know we need to move at least one box that's in the way.
+        // Let's see if we can move it (recursion bruh).
+        let mut all_moves = vec![];
+        if self.map[new_y][new_x] != '.' {
+            all_moves.extend(self.can_move(new_x, new_y, instruction)?);
+        }
+        if let Some((other_new_x, other_new_y)) = other_new {
+            if self.map[other_new_y][other_new_x] != '.' {
+                all_moves.extend(self.can_move(other_new_x, other_new_y, instruction)?);
+            }
+        }
+
+        // We need to include ourself as well as our partner (if we have one).
+        all_moves.push((x, y));
+        if let Some((other_x, other_y)) = other {
+            all_moves.push((other_x, other_y));
+        }
+        Some(all_moves)
+    }
+
+    fn gps(&self) -> usize {
+        self.map
+            .iter()
+            .enumerate()
+            .flat_map(|(y, line)| {
+                line.iter().enumerate().map(move |(x, c)| {
+                    // For p1, we are looking for 'O', for p2 we are looking for
+                    // the left side of the box '['.
+                    if *c == '[' || *c == 'O' {
+                        y * 100 + x
+                    } else {
+                        0
                     }
-                }
-            }
-        }
-        if rock_count != self.rocks.len() {
-            println!(
-                "Rock count mismatch! Grid: {}, Set: {}",
-                rock_count,
-                self.rocks.len()
-            );
-            return false;
-        }
-        true
-    }
-
-    fn execute_moves(&mut self, moves: &str) {
-        for direction in moves.chars().filter(|c| !c.is_whitespace()) {
-            if matches!(direction, '<' | '>' | '^' | 'v') {
-                self.move_robot(direction);
-            }
-        }
-    }
-
-    fn get_rock_positions(&self) -> &HashSet<(usize, usize)> {
-        &self.rocks
-    }
-
-    fn calculate_score(&self) -> usize {
-        self.rocks.iter().fold(0, |acc, &(x, y)| {
-            let y_score = 100 * y; // Remove the +1 from y calculation
-            let x_score = x; // Remove the +1 from x calculation
-            acc + y_score + x_score
-        })
-    }
-
-    fn print_grid(&self) {
-        for y in 0..self.height {
-            for x in 0..self.width {
-                let cell = &self.cells[y][x];
-                match cell {
-                    Cell::Empty => print!("."),
-                    Cell::Wall => print!("#"),
-                    Cell::Rock => print!("O"),
-                    Cell::Robot => print!("@"),
-                }
-            }
-            println!();
-        }
-        println!();
+                })
+            })
+            .sum()
     }
 }
 
-fn main() {
-    let map_str = read_to_string("map.txt").expect("Failed to read map file");
-    let moves = read_to_string("movements.txt").expect("Failed to read movement file");
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let input = include_str!("../input.txt");
+    let (map, instructions) = input
+        .split_once("\n\n")
+        .or_else(|| input.split_once("\r\n\r\n"))
+        .expect("Input should contain map and instructions separated by blank line");
+
+    // Parse maps.
+    let mut wide_map = Map::new_wide(map);
+    let mut map = Map::new(map);
+
+    // Parse instructions.
+    let instructions: Vec<Instruction> = instructions
+        .chars()
+        .filter(|c| !c.is_whitespace())
+        .map(Instruction::from)
+        .collect();
 
     // Part 1
-    println!("Part 1:");
-    println!("=======");
-    println!("Original grid:");
-    let mut grid = Grid::new(&map_str);
-    println!(
-        "Robot starting position: ({}, {})",
-        grid.robot_pos.0, grid.robot_pos.1
-    );
-    grid.print_grid();
-    grid.execute_moves(&moves.trim());
-    println!("Part 1 Total score: {}", grid.calculate_score());
+    map.apply_all(&instructions);
+    println!("p1: {}", map.gps());
 
     // Part 2
-    println!("\nPart 2:");
-    println!("=======");
-    println!("Doubled grid:");
-    let doubled_map = Grid::double_map(&map_str);
-    println!("{}", doubled_map);
+    wide_map.apply_all(&instructions);
+    println!("p2: {}", wide_map.gps());
 
-    // Create a Grid from the doubled map to find robot position
-    let doubled_grid = Grid::new(&doubled_map);
-    println!(
-        "Robot position in doubled grid: ({}, {})",
-        doubled_grid.robot_pos.0, doubled_grid.robot_pos.1
-    );
+    Ok(())
 }
+
