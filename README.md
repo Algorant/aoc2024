@@ -22,3 +22,4 @@ I will be writing them in [Rust](https://www.rust-lang.org/).
 - [Day 14](day-14/)
 - [Day 15](day-15/)
 - [Day 16](day-16/)
+- [Day 17](day-17/)
