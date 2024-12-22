@@ -167,11 +167,11 @@ fn run_program(initial_a: i64, initial_b: i64, initial_c: i64, program: &str) ->
 }
 
 fn main() {
-    // Test input
-    let initial_a = 729;
+    // Part A Input
+    let initial_a = 60589763;
     let initial_b = 0;
     let initial_c = 0;
-    let program = "0,1,5,4,3,0";
+    let program = "2,4,1,5,7,5,1,6,4,1,5,5,0,3,3,0";
 
     let output = run_program(initial_a, initial_b, initial_c, program);
     println!("Program output: {}", output);
