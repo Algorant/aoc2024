@@ -53,14 +53,7 @@ impl Computer {
     }
 
     fn execute_instruction(&mut self, opcode: Opcode, operand: u8, operand_type: OperandType) {
-        println!(
-            "Executing: {:?}, operand: {}, operand_type: {:?}",
-            opcode, operand, operand_type
-        );
-        println!(
-            "Before - A: {}, B: {}, C: {}",
-            self.register_a, self.register_b, self.register_c
-        );
+        // Debug output removed for searching
         match opcode {
             Opcode::ADV => {
                 let power = self.resolve_operand(operand, operand_type);
@@ -98,11 +91,6 @@ impl Computer {
             }
         }
         self.instruction_pointer += 2; // Normal instruction pointer increment
-        println!(
-            "After - A: {}, B: {}, C: {}",
-            self.register_a, self.register_b, self.register_c
-        );
-        println!("Instruction pointer: {}\n", self.instruction_pointer);
     }
 
     fn get_output(&self) -> String {
@@ -166,13 +154,76 @@ fn run_program(initial_a: i64, initial_b: i64, initial_c: i64, program: &str) ->
     computer.get_output()
 }
 
+fn find_self_replicating_a(program: &str) -> Option<i64> {
+    // Parse target program into numbers
+    let target_numbers: Vec<i64> = program
+        .split(',')
+        .filter_map(|s| s.parse().ok())
+        .rev() // Reverse because we build from right to left
+        .collect();
+
+    println!("Target (reversed): {:?}", target_numbers);
+
+    // Start with just testing rightomst digit (first in our reversed list)
+    let mut candidates = vec![(0i64, Vec::new())]; // (value, matching_outputs)
+
+    // For each position (right to left)
+    for (pos, &target) in target_numbers.iter().enumerate() {
+        println!("\nTesting position {} (target={})", pos, target);
+        let mut new_candidates = Vec::new();
+
+        // For each candidate from previous position
+        for (prev_value, prev_outputs) in candidates {
+            // Try all possible 3-bit values (0-7)
+            for i in 0..8 {
+                let test_value = (prev_value << 3) | i;
+                let output = run_program(test_value, 0, 0, program);
+                let output_nums: Vec<i64> =
+                    output.split(',').filter_map(|s| s.parse().ok()).collect();
+
+                // Check if this value produces the correct sequence so far
+                if output_nums.len() > pos
+                    && output_nums[..=pos]
+                        .iter()
+                        .rev()
+                        .copied()
+                        .collect::<Vec<_>>()
+                        == target_numbers[..=pos]
+                {
+                    let mut new_outputs = prev_outputs.clone();
+                    new_outputs.push(i);
+                    new_candidates.push((test_value, new_outputs));
+                    println!("Found candidate: {} -> {:?}", test_value, output);
+                }
+            }
+        }
+
+        if new_candidates.is_empty() {
+            println!("No candidates found for position {}", pos);
+            return None;
+        }
+
+        candidates = new_candidates;
+    }
+
+    // Return the smallest value that generates the complete sequence
+    candidates.into_iter().map(|(value, _)| value).min()
+}
+
 fn main() {
-    // Part A Input
-    let initial_a = 60589763;
-    let initial_b = 0;
-    let initial_c = 0;
     let program = "2,4,1,5,7,5,1,6,4,1,5,5,0,3,3,0";
 
-    let output = run_program(initial_a, initial_b, initial_c, program);
-    println!("Program output: {}", output);
+    // Part 1
+    let part1_a = 60589763;
+    println!("Part 1:");
+    let output = run_program(part1_a, 0, 0, program);
+    println!("Program output with A={}: {}\n", part1_a, output);
+
+    // Part 2
+    println!("Part 2:");
+    println!("Searching for self-replicating value of A...");
+    match find_self_replicating_a(program) {
+        Some(a) => println!("Found self-replicating value: A={}", a),
+        None => println!("No self-replicating value found in search range"),
+    }
 }
