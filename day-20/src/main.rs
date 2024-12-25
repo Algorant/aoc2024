@@ -12,6 +12,93 @@ struct Grid {
 }
 
 impl Grid {
+    fn calculate_distances(&self, start: (usize, usize)) -> Vec<Vec<usize>> {
+        let mut distances = vec![vec![usize::MAX; self.width]; self.height];
+        let mut queue = std::collections::VecDeque::new();
+
+        // Start position has distance 0
+        queue.push_back((start, 0));
+        distances[start.1][start.0] = 0;
+
+        while let Some(((x, y), dist)) = queue.pop_front() {
+            for (dx, dy) in [(0, 1), (1, 0), (0, -1), (-1, 0)] {
+                let new_x = (x as i32 + dx) as usize;
+                let new_y = (y as i32 + dy) as usize;
+
+                if new_x < self.width
+                    && new_y < self.height
+                    && self.cells[new_y][new_x] != '#'
+                    && distances[new_y][new_x] == usize::MAX
+                {
+                    distances[new_y][new_x] = dist + 1;
+                    queue.push_back(((new_x, new_y), dist + 1));
+                }
+            }
+        }
+
+        distances
+    }
+
+    fn find_multi_shortcuts(&self, max_steps: usize) -> Vec<((usize, usize), usize)> {
+        let distances = self.calculate_distances(self.start);
+        let mut shortcuts = Vec::new();
+
+        // For each non-wall position
+        for y in 0..self.height {
+            for x in 0..self.width {
+                if self.cells[y][x] == '#' {
+                    continue;
+                }
+
+                let start_pos = (x, y);
+                let start_dist = distances[y][x];
+                if start_dist == usize::MAX {
+                    continue;
+                }
+
+                // Try all positions within max_steps Manhattan distance
+                for dx in -(max_steps as i32)..=max_steps as i32 {
+                    for dy in -(max_steps as i32)..=max_steps as i32 {
+                        // Check if within max_steps Manhattan distance
+                        if dx.abs() + dy.abs() > max_steps as i32 {
+                            continue;
+                        }
+
+                        let end_x = x as i32 + dx;
+                        let end_y = y as i32 + dy;
+
+                        if end_x < 0
+                            || end_y < 0
+                            || end_x >= self.width as i32
+                            || end_y >= self.height as i32
+                        {
+                            continue;
+                        }
+
+                        let end_x = end_x as usize;
+                        let end_y = end_y as usize;
+
+                        if self.cells[end_y][end_x] == '#' {
+                            continue;
+                        }
+
+                        let end_dist = distances[end_y][end_x];
+                        if end_dist == usize::MAX {
+                            continue;
+                        }
+
+                        let shortcut_dist = start_dist + (dx.abs() + dy.abs()) as usize;
+                        if shortcut_dist < end_dist && end_dist - shortcut_dist >= 100 {
+                            shortcuts.push(((end_x, end_y), end_dist - shortcut_dist));
+                        }
+                    }
+                }
+            }
+        }
+
+        shortcuts
+    }
+
     fn new(input: &str) -> Self {
         let mut cells = Vec::new();
         let mut start = (0, 0);
@@ -126,19 +213,29 @@ fn main() {
     let input = read_to_string("input.txt").expect("Failed to read input file");
     let grid = Grid::new(&input);
 
-    // Find all wall shortcuts that save at least 100 moves
+    // Part 1: Single wall shortcuts
     let shortcuts = grid.find_wall_shortcuts();
 
-    // Group shortcuts by number of steps saved and count them
     let mut counts: std::collections::HashMap<usize, usize> = std::collections::HashMap::new();
     for (_, saved_steps) in shortcuts {
         *counts.entry(saved_steps).or_insert(0) += 1;
     }
-
-    // Sum up all the counts (ignoring the saved_steps values)
-    let total_points: usize = counts.values().sum();
+    let part1_total: usize = counts.values().sum();
     println!(
-        "Total number of points that save >100 steps: {}",
-        total_points
+        "Part 1 - Single wall shortcuts that save >100 steps: {}",
+        part1_total
+    );
+
+    // Part 2: Multi-step shortcuts
+    let multi_shortcuts = grid.find_multi_shortcuts(20);
+    let mut multi_counts: std::collections::HashMap<usize, usize> =
+        std::collections::HashMap::new();
+    for (_, saved_steps) in multi_shortcuts {
+        *multi_counts.entry(saved_steps).or_insert(0) += 1;
+    }
+    let part2_total: usize = multi_counts.values().sum();
+    println!(
+        "Part 2 - Multi-step shortcuts that save >100 steps: {}",
+        part2_total
     );
 }
