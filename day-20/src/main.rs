@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::fs::read_to_string;
 
 #[derive(Debug)]
@@ -7,7 +6,6 @@ struct Grid {
     width: usize,
     height: usize,
     start: (usize, usize),
-    end: (usize, usize),
     path: Vec<(usize, usize)>,
 }
 
@@ -50,7 +48,6 @@ impl Grid {
                     continue;
                 }
 
-                let start_pos = (x, y);
                 let start_dist = distances[y][x];
                 if start_dist == usize::MAX {
                     continue;
@@ -149,21 +146,19 @@ impl Grid {
         }
 
         let height = cells.len();
-        let width = cells.get(0).map_or(0, |row| row.len());
+        let width = cells.first().map_or(0, |row| row.len());
 
         Grid {
             cells,
             width,
             height,
             start,
-            end,
             path,
         }
     }
 
     fn find_wall_shortcuts(&self) -> Vec<((usize, usize), usize)> {
         let mut shortcuts = Vec::new();
-        let normal_length = self.path.len() - 1; // -1 because we count steps, not positions
 
         // For each position in the path
         for (path_idx, &(x, y)) in self.path.iter().enumerate() {
@@ -192,7 +187,6 @@ impl Grid {
                             == 1
                         {
                             // Calculate how many steps this shortcut would save
-                            let shortcut_length = path_idx + 2; // +2 for the wall and next position
                             let original_length = dest_idx - path_idx;
                             let saved_steps = original_length - 1; // -1 because we're adding one step through wall
 
