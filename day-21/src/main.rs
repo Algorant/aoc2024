@@ -325,7 +325,7 @@ impl ControlSystem {
 
                 // Try to process input
                 if let Some(button) = temp_system.process_input(direction) {
-                    println!("Found button press: {:?} after move: {}", button, direction);
+                    //println!("Found button press: {:?} after move: {}", button, direction);
                     let mut new_code = new_state.code_entered.clone();
                     new_code.push(button);
 
@@ -355,24 +355,49 @@ impl ControlSystem {
 }
 
 fn main() {
-    let mut control_system = ControlSystem::new();
+    let codes = vec![
+        (
+            "789A",
+            vec![Button::Num(7), Button::Num(8), Button::Num(9), Button::A],
+        ),
+        (
+            "540A",
+            vec![Button::Num(5), Button::Num(4), Button::Num(0), Button::A],
+        ),
+        (
+            "285A",
+            vec![Button::Num(2), Button::Num(8), Button::Num(5), Button::A],
+        ),
+        (
+            "140A",
+            vec![Button::Num(1), Button::Num(4), Button::Num(0), Button::A],
+        ),
+        (
+            "189A",
+            vec![Button::Num(1), Button::Num(8), Button::Num(9), Button::A],
+        ),
+    ];
 
-    // Test a single move sequence first
-    println!("Testing single button press:");
-    let result = control_system.process_input("activate");
-    println!("Result of single activate: {:?}", result);
+    let mut total_sum = 0;
 
-    // Now try to find the sequence for the code
-    let control_system = ControlSystem::new();
-    let target_code = vec![Button::Num(1), Button::Num(2), Button::Num(3), Button::A];
-
-    match control_system.find_sequence_for_code(target_code) {
-        Some(sequence) => {
-            println!("Found sequence:");
-            for (i, step) in sequence.iter().enumerate() {
-                println!("Step {}: {}", i + 1, step);
+    for (code_str, target_code) in codes {
+        let control_system = ControlSystem::new();
+        match control_system.find_sequence_for_code(target_code) {
+            Some(sequence) => {
+                // Extract numeric part from code_str by removing 'A'
+                let numeric_part: u32 = code_str.trim_end_matches('A').parse().unwrap();
+                let complexity = sequence.len() as u32 * numeric_part;
+                println!(
+                    "Code {}: {} moves, complexity: {}",
+                    code_str,
+                    sequence.len(),
+                    complexity
+                );
+                total_sum += complexity;
             }
+            None => println!("No solution found for code {}", code_str),
         }
-        None => println!("No solution found!"),
     }
+
+    println!("Total sum of complexities: {}", total_sum);
 }
