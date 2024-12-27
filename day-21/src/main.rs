@@ -1,6 +1,6 @@
-use std::collections::{HashSet, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Button {
     Num(u8),
     A,
@@ -186,6 +186,32 @@ impl ControlSystem {
         }
     }
 
+    fn is_valid_chain_position(&self) -> bool {
+        // Check if any pad is over an invalid position on the keypad
+        let keypad_positions = [
+            self.dpad1.current_pos,
+            self.dpad2.current_pos,
+            self.dpad3.current_pos,
+        ];
+
+        for pos in keypad_positions.iter() {
+            // Convert dpad position to equivalent keypad position
+            let keypad_x = pos.x;
+            let keypad_y = pos.y;
+
+            // Check if this position would be invalid on the keypad
+            if keypad_y < 0 || keypad_y >= 4 || keypad_x < 0 || keypad_x >= 3 {
+                return false;
+            }
+
+            // Check if this position corresponds to None on the keypad
+            if self.keypad.layout[keypad_y as usize][keypad_x as usize].is_none() {
+                return false;
+            }
+        }
+        true
+    }
+
     fn process_input(&mut self, input: &str) -> Option<Button> {
         // Special handling for activate command
         if input == "activate" {
@@ -214,6 +240,12 @@ impl ControlSystem {
             if !self.dpad3.move_direction(input) {
                 return None;
             }
+            // Check if this movement created an invalid chain position
+            if !self.is_valid_chain_position() {
+                // Undo the movement
+                self.dpad3.current_pos = Position { x: 2, y: 0 };
+                return None;
+            }
         }
 
         // Get action from dpad3
@@ -229,6 +261,12 @@ impl ControlSystem {
         // If not activate action, move dpad2
         if dpad3_action != "activate" {
             if !self.dpad2.move_direction(dpad3_action) {
+                return None;
+            }
+            // Check if this movement created an invalid chain position
+            if !self.is_valid_chain_position() {
+                // Undo the movement
+                self.dpad2.current_pos = Position { x: 2, y: 0 };
                 return None;
             }
             return None;
@@ -249,6 +287,12 @@ impl ControlSystem {
             if !self.dpad1.move_direction(dpad2_action) {
                 return None;
             }
+            // Check if this movement created an invalid chain position
+            if !self.is_valid_chain_position() {
+                // Undo the movement
+                self.dpad1.current_pos = Position { x: 2, y: 0 };
+                return None;
+            }
             return None;
         }
 
@@ -267,6 +311,12 @@ impl ControlSystem {
             if !self.keypad.move_direction(dpad1_action) {
                 return None;
             }
+            // Check if this movement created an invalid chain position
+            if !self.is_valid_chain_position() {
+                // Undo the movement
+                self.keypad.current_pos = Position { x: 2, y: 3 };
+                return None;
+            }
             return None;
         };
         // If we get here, all three dpads were "activated", so return the current keypad button
@@ -275,78 +325,154 @@ impl ControlSystem {
     }
 
     fn find_sequence_for_code(&self, target_code: Vec<Button>) -> Option<Vec<String>> {
-        println!("Starting search for code: {:?}", target_code);
-        let mut visited = HashSet::new();
-        let mut queue = VecDeque::new();
+        use std::cmp::Ordering;
+        use std::collections::BinaryHeap;
+
+        #[derive(Eq, Clone)]
+        struct State {
+            cost: usize,
+            pos: (Position, Position, Position, Position),
+            sequence: Vec<String>,
+            code_entered: Vec<Button>,
+        }
+
+        impl Ord for State {
+            fn cmp(&self, other: &Self) -> Ordering {
+                other.cost.cmp(&self.cost)
+            }
+        }
+
+        impl PartialOrd for State {
+            fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+                Some(self.cmp(other))
+            }
+        }
+
+        impl PartialEq for State {
+            fn eq(&self, other: &Self) -> bool {
+                self.cost == other.cost
+            }
+        }
+
+        let mut distances: HashMap<(Position, Position, Position, Position, usize), usize> =
+            HashMap::new();
+        let mut heap = BinaryHeap::new();
 
         // Initial state
-        let initial_state = SystemState {
-            dpad3: self.dpad3.current_pos,
-            dpad2: self.dpad2.current_pos,
-            dpad1: self.dpad1.current_pos,
-            keypad: self.keypad.current_pos,
+        let initial_pos = (
+            self.dpad3.current_pos,
+            self.dpad2.current_pos,
+            self.dpad1.current_pos,
+            self.keypad.current_pos,
+        );
+
+        heap.push(State {
+            cost: 0,
+            pos: initial_pos,
             sequence: Vec::new(),
             code_entered: Vec::new(),
-        };
+        });
 
-        queue.push_back(initial_state);
+        distances.insert(
+            (
+                initial_pos.0,
+                initial_pos.1,
+                initial_pos.2,
+                initial_pos.3,
+                0,
+            ),
+            0,
+        );
 
-        while let Some(current_state) = queue.pop_front() {
+        while let Some(State {
+            cost,
+            pos,
+            sequence,
+            code_entered,
+        }) = heap.pop()
+        {
             // Check if we've completed the code
-            if current_state.code_entered == target_code {
-                return Some(current_state.sequence);
+            if code_entered == target_code {
+                return Some(sequence);
             }
 
-            // Generate state key for visited check
-            let state_key = (
-                current_state.dpad3,
-                current_state.dpad2,
-                current_state.dpad1,
-                current_state.keypad,
-                current_state.code_entered.len(),
-            );
-            if visited.contains(&state_key) {
-                continue;
-            }
+            let state_key = (pos.0, pos.1, pos.2, pos.3, code_entered.len());
 
-            visited.insert(state_key);
+            // If we've found a longer path to this state, skip it
+            if let Some(&d) = distances.get(&state_key) {
+                if cost > d {
+                    continue;
+                }
+            }
 
             // Try each possible move
             for direction in &["up", "down", "left", "right", "activate"] {
-                let mut new_state = current_state.clone();
-                new_state.sequence.push(direction.to_string());
+                let mut new_sequence = sequence.clone();
+                new_sequence.push(direction.to_string());
 
                 // Create temporary control system to simulate move
                 let mut temp_system = ControlSystem::new();
-                temp_system.dpad3.current_pos = new_state.dpad3;
-                temp_system.dpad2.current_pos = new_state.dpad2;
-                temp_system.dpad1.current_pos = new_state.dpad1;
-                temp_system.keypad.current_pos = new_state.keypad;
+                temp_system.dpad3.current_pos = pos.0;
+                temp_system.dpad2.current_pos = pos.1;
+                temp_system.dpad1.current_pos = pos.2;
+                temp_system.keypad.current_pos = pos.3;
 
                 // Try to process input
                 if let Some(button) = temp_system.process_input(direction) {
                     //println!("Found button press: {:?} after move: {}", button, direction);
-                    let mut new_code = new_state.code_entered.clone();
+                    let mut new_code = code_entered.clone();
                     new_code.push(button);
 
-                    // Check if this matches what we want
                     if new_code.len() <= target_code.len()
                         && new_code[new_code.len() - 1] == target_code[new_code.len() - 1]
                     {
-                        new_state.code_entered = new_code;
-                        new_state.dpad3 = temp_system.dpad3.current_pos;
-                        new_state.dpad2 = temp_system.dpad2.current_pos;
-                        new_state.dpad1 = temp_system.dpad1.current_pos;
-                        new_state.keypad = temp_system.keypad.current_pos;
-                        queue.push_back(new_state);
+                        let new_pos = (
+                            temp_system.dpad3.current_pos,
+                            temp_system.dpad2.current_pos,
+                            temp_system.dpad1.current_pos,
+                            temp_system.keypad.current_pos,
+                        );
+
+                        let new_cost = cost + 1;
+                        let new_key = (new_pos.0, new_pos.1, new_pos.2, new_pos.3, new_code.len());
+
+                        if !distances.contains_key(&new_key) || distances[&new_key] > new_cost {
+                            distances.insert(new_key, new_cost);
+                            heap.push(State {
+                                cost: new_cost,
+                                pos: new_pos,
+                                sequence: new_sequence,
+                                code_entered: new_code,
+                            });
+                        }
                     }
                 } else {
                     // Move was valid but didn't result in a button press
-                    new_state.dpad3 = temp_system.dpad3.current_pos;
-                    new_state.dpad2 = temp_system.dpad2.current_pos;
-                    new_state.dpad1 = temp_system.dpad1.current_pos;
-                    new_state.keypad = temp_system.keypad.current_pos;
-                    queue.push_back(new_state);
+                    let new_pos = (
+                        temp_system.dpad3.current_pos,
+                        temp_system.dpad2.current_pos,
+                        temp_system.dpad1.current_pos,
+                        temp_system.keypad.current_pos,
+                    );
+
+                    let new_cost = cost + 1;
+                    let new_key = (
+                        new_pos.0,
+                        new_pos.1,
+                        new_pos.2,
+                        new_pos.3,
+                        code_entered.len(),
+                    );
+
+                    if !distances.contains_key(&new_key) || distances[&new_key] > new_cost {
+                        distances.insert(new_key, new_cost);
+                        heap.push(State {
+                            cost: new_cost,
+                            pos: new_pos,
+                            sequence: new_sequence,
+                            code_entered: code_entered.clone(),
+                        });
+                    }
                 }
             }
         }
