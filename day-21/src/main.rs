@@ -1,3 +1,5 @@
+use std::collections::{HashSet, VecDeque};
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Button {
     Num(u8),
@@ -13,7 +15,7 @@ enum DPadButton {
     A,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Hash, Eq)]
 struct Position {
     x: i32,
     y: i32,
@@ -164,6 +166,16 @@ struct ControlSystem {
     keypad: Keypad,
 }
 
+#[derive(Debug, Clone)]
+struct SystemState {
+    dpad3: Position,
+    dpad2: Position,
+    dpad1: Position,
+    keypad: Position,
+    sequence: Vec<String>,     // Stores sequence of moves so far
+    code_entered: Vec<Button>, // Stores buttons successfully entered
+}
+
 impl ControlSystem {
     fn new() -> Self {
         ControlSystem {
@@ -177,7 +189,26 @@ impl ControlSystem {
     fn process_input(&mut self, input: &str) -> Option<Button> {
         // Special handling for activate command
         if input == "activate" {
-            // No need to move, just get the current button and process
+            // Check if we're on 'A' for the current active pad
+            match self.dpad3.get_current_button() {
+                Some(DPadButton::A) => {
+                    // dpad3 is on 'A', check dpad2
+                    match self.dpad2.get_current_button() {
+                        Some(DPadButton::A) => {
+                            // dpad2 is on 'A', check dpad1
+                            match self.dpad1.get_current_button() {
+                                Some(DPadButton::A) => {
+                                    // All pads are on 'A', return keypad button
+                                    return self.keypad.get_current_button();
+                                }
+                                _ => (),
+                            }
+                        }
+                        _ => (),
+                    }
+                }
+                _ => (),
+            }
         } else {
             // Move dpad3
             if !self.dpad3.move_direction(input) {
@@ -242,38 +273,106 @@ impl ControlSystem {
 
         self.keypad.get_current_button()
     }
+
+    fn find_sequence_for_code(&self, target_code: Vec<Button>) -> Option<Vec<String>> {
+        println!("Starting search for code: {:?}", target_code);
+        let mut visited = HashSet::new();
+        let mut queue = VecDeque::new();
+
+        // Initial state
+        let initial_state = SystemState {
+            dpad3: self.dpad3.current_pos,
+            dpad2: self.dpad2.current_pos,
+            dpad1: self.dpad1.current_pos,
+            keypad: self.keypad.current_pos,
+            sequence: Vec::new(),
+            code_entered: Vec::new(),
+        };
+
+        queue.push_back(initial_state);
+
+        while let Some(current_state) = queue.pop_front() {
+            // Check if we've completed the code
+            if current_state.code_entered == target_code {
+                return Some(current_state.sequence);
+            }
+
+            // Generate state key for visited check
+            let state_key = (
+                current_state.dpad3,
+                current_state.dpad2,
+                current_state.dpad1,
+                current_state.keypad,
+                current_state.code_entered.len(),
+            );
+            if visited.contains(&state_key) {
+                continue;
+            }
+
+            visited.insert(state_key);
+
+            // Try each possible move
+            for direction in &["up", "down", "left", "right", "activate"] {
+                let mut new_state = current_state.clone();
+                new_state.sequence.push(direction.to_string());
+
+                // Create temporary control system to simulate move
+                let mut temp_system = ControlSystem::new();
+                temp_system.dpad3.current_pos = new_state.dpad3;
+                temp_system.dpad2.current_pos = new_state.dpad2;
+                temp_system.dpad1.current_pos = new_state.dpad1;
+                temp_system.keypad.current_pos = new_state.keypad;
+
+                // Try to process input
+                if let Some(button) = temp_system.process_input(direction) {
+                    println!("Found button press: {:?} after move: {}", button, direction);
+                    let mut new_code = new_state.code_entered.clone();
+                    new_code.push(button);
+
+                    // Check if this matches what we want
+                    if new_code.len() <= target_code.len()
+                        && new_code[new_code.len() - 1] == target_code[new_code.len() - 1]
+                    {
+                        new_state.code_entered = new_code;
+                        new_state.dpad3 = temp_system.dpad3.current_pos;
+                        new_state.dpad2 = temp_system.dpad2.current_pos;
+                        new_state.dpad1 = temp_system.dpad1.current_pos;
+                        new_state.keypad = temp_system.keypad.current_pos;
+                        queue.push_back(new_state);
+                    }
+                } else {
+                    // Move was valid but didn't result in a button press
+                    new_state.dpad3 = temp_system.dpad3.current_pos;
+                    new_state.dpad2 = temp_system.dpad2.current_pos;
+                    new_state.dpad1 = temp_system.dpad1.current_pos;
+                    new_state.keypad = temp_system.keypad.current_pos;
+                    queue.push_back(new_state);
+                }
+            }
+        }
+        None // No solution found
+    }
 }
 
 fn main() {
     let mut control_system = ControlSystem::new();
 
-    // Step 1: Move dpad3 to 'A' and activate it
-    println!(
-        "Current dpad3 button: {:?}",
-        control_system.dpad3.get_current_button()
-    );
-    // dpad3 starts on 'A', so we can activate immediately
+    // Test a single move sequence first
+    println!("Testing single button press:");
     let result = control_system.process_input("activate");
-    println!("After activating dpad3: {:?}", result);
+    println!("Result of single activate: {:?}", result);
 
-    // Step 2: Move dpad2 to 'A' and activate it
-    println!(
-        "Current dpad2 button: {:?}",
-        control_system.dpad2.get_current_button()
-    );
-    // dpad2 starts on 'A', so we can activate immediately
-    let result = control_system.process_input("activate");
-    println!("After activating dpad2: {:?}", result);
+    // Now try to find the sequence for the code
+    let control_system = ControlSystem::new();
+    let target_code = vec![Button::Num(1), Button::Num(2), Button::Num(3), Button::A];
 
-    // Step 3: Move dpad1 to 'A' and activate it
-    println!(
-        "Current dpad1 button: {:?}",
-        control_system.dpad1.get_current_button()
-    );
-    // dpad1 starts on 'A', so we can activate immediately
-    let result = control_system.process_input("activate");
-    println!("After activating dpad1: {:?}", result);
-
-    // Final result should be pressing 'A' on the keypad
-    println!("Final result: {:?}", result);
+    match control_system.find_sequence_for_code(target_code) {
+        Some(sequence) => {
+            println!("Found sequence:");
+            for (i, step) in sequence.iter().enumerate() {
+                println!("Step {}: {}", i + 1, step);
+            }
+        }
+        None => println!("No solution found!"),
+    }
 }
