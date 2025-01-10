@@ -152,6 +152,7 @@ fn main() {
     // Build binary string and decimal value
     let binary: String = z_circuits
         .iter()
+        .rev()
         .map(|(_, &value)| if value { '1' } else { '0' })
         .collect();
 
