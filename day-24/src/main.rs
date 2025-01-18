@@ -49,15 +49,15 @@ fn parse_input(input: &str) -> (HashMap<String, bool>, Vec<(Operation, String)>)
         }
     }
     // Debug print
-    println!("\nParsed initial circuits:");
-    for (k, v) in &circuits {
-        println!("{}: {}", k, if *v { 1 } else { 0 });
-    }
-
-    println!("\nParsed operations:");
-    for (op, target) in &operations {
-        println!("{:?} -> {}", op, target);
-    }
+    //println!("\nParsed initial circuits:");
+    //for (k, v) in &circuits {
+    //    println!("{}: {}", k, if *v { 1 } else { 0 });
+    //}
+    //
+    //println!("\nParsed operations:");
+    //for (op, target) in &operations {
+    //    println!("{:?} -> {}", op, target);
+    //}
 
     (circuits, operations)
 }
@@ -74,8 +74,6 @@ fn evaluate_circuits(
         iteration += 1;
 
         // Create a snapshot of current state for comparison
-        let previous_state = circuits.clone();
-
         for (operation, target) in operations {
             let (input1, input2) = match operation {
                 Operation::And(a, b) | Operation::Or(a, b) | Operation::Xor(a, b) => (a, b),
@@ -102,14 +100,14 @@ fn evaluate_circuits(
                 } else {
                     circuits.insert(target.clone(), new_result);
                     changes_made = true;
-                    println!("New circuit {}: {}", target, new_result as u8);
+                    //println!("New circuit {}: {}", target, new_result as u8);
                 }
             }
         }
 
         // Check if we've reached a stable state
         if !changes_made || iteration > max_iterations {
-            println!("Evaluation completed after {} iterations", iteration);
+            //println!("Evaluation completed after {} iterations", iteration);
             break;
         }
     }
@@ -128,13 +126,13 @@ fn main() {
     let final_circuits = evaluate_circuits(initial_circuits, &operations);
 
     // Print results
-    println!("Final circuit states:");
+    //println!("Final circuit states:");
     let mut sorted_circuits: Vec<_> = final_circuits.iter().collect();
     sorted_circuits.sort_by(|a, b| a.0.cmp(b.0));
 
-    for (circuit, value) in &sorted_circuits {
-        println!("{}: {}", circuit, if **value { 1 } else { 0 });
-    }
+    //for (circuit, value) in &sorted_circuits {
+    //    println!("{}: {}", circuit, if **value { 1 } else { 0 });
+    //}
 
     // Extract the z-circuits and build binary number
     let mut z_circuits: Vec<_> = sorted_circuits
