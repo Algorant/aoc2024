@@ -5,7 +5,6 @@ My solutions for [Advent of Code 2024](https://adventofcode.com/2024).
 I will be writing them in [Rust](https://www.rust-lang.org/).
 
 
-![img](./images/Finished.png)
 
 ## Days
 
@@ -34,3 +33,7 @@ I will be writing them in [Rust](https://www.rust-lang.org/).
 - [Day 23](day-23/)
 - [Day 24](day-24/)
 - [Day 25](day-25/)
+
+
+![img](./images/Finished.png)
+![img](./images/tokei_lines_of_code.png)
