@@ -1,162 +1,199 @@
+use itertools::Itertools;
 use std::collections::HashMap;
 
-#[derive(Debug)]
-enum Operation {
-    And(String, String),
-    Or(String, String),
-    Xor(String, String),
+#[derive(PartialEq, Eq, Clone, Copy)]
+enum Operator {
+    And,
+    Or,
+    Xor,
 }
 
-fn parse_input(input: &str) -> (HashMap<String, bool>, Vec<(Operation, String)>) {
-    let mut circuits = HashMap::new();
-    let mut operations = Vec::new();
-    let mut parsing_operations = false;
-
-    for line in input.lines() {
-        if line.is_empty() {
-            parsing_operations = true;
-            continue;
-        }
-
-        if !parsing_operations {
-            // Parse initial values
-            let parts: Vec<&str> = line.split(": ").collect();
-            let circuit = parts[0].to_string();
-            let value = parts[1].trim() == "1";
-            circuits.insert(circuit, value);
-        } else {
-            // Parse operations
-            let parts: Vec<&str> = line.split(" -> ").collect();
-            let operation_parts: Vec<&str> = parts[0].split_whitespace().collect();
-
-            let operation = match operation_parts[1] {
-                "AND" => Operation::And(
-                    operation_parts[0].to_string(),
-                    operation_parts[2].to_string(),
-                ),
-                "OR" => Operation::Or(
-                    operation_parts[0].to_string(),
-                    operation_parts[2].to_string(),
-                ),
-                "XOR" => Operation::Xor(
-                    operation_parts[0].to_string(),
-                    operation_parts[2].to_string(),
-                ),
-                _ => panic!("Unknown operation"),
-            };
-
-            operations.push((operation, parts[1].trim().to_string()));
+impl Operator {
+    fn execute(&self, a: bool, b: bool) -> bool {
+        match self {
+            Self::And => a & b,
+            Self::Or => a | b,
+            Self::Xor => a ^ b,
         }
     }
-    // Debug print
-    //println!("\nParsed initial circuits:");
-    //for (k, v) in &circuits {
-    //    println!("{}: {}", k, if *v { 1 } else { 0 });
-    //}
-    //
-    //println!("\nParsed operations:");
-    //for (op, target) in &operations {
-    //    println!("{:?} -> {}", op, target);
-    //}
-
-    (circuits, operations)
 }
 
-fn evaluate_circuits(
-    mut circuits: HashMap<String, bool>,
-    operations: &[(Operation, String)],
-) -> HashMap<String, bool> {
-    let mut iteration = 0;
-    let max_iterations = operations.len() * 2; // Safety limit
+#[derive(Clone, Copy)]
+struct Operation<'a> {
+    lhs: &'a str,
+    op: Operator,
+    rhs: &'a str,
+}
 
-    loop {
-        let mut changes_made = false;
-        iteration += 1;
-
-        // Create a snapshot of current state for comparison
-        for (operation, target) in operations {
-            let (input1, input2) = match operation {
-                Operation::And(a, b) | Operation::Or(a, b) | Operation::Xor(a, b) => (a, b),
-            };
-
-            // Get current values of inputs (they might have changed)
-            if let (Some(&value1), Some(&value2)) = (circuits.get(input1), circuits.get(input2)) {
-                let new_result = match operation {
-                    Operation::And(_, _) => value1 & value2,
-                    Operation::Or(_, _) => value1 | value2,
-                    Operation::Xor(_, _) => value1 ^ value2,
-                };
-
-                // Update or insert the new result
-                if let Some(&old_value) = circuits.get(target) {
-                    if old_value != new_result {
-                        circuits.insert(target.clone(), new_result);
-                        changes_made = true;
-                        println!(
-                            "Updated {}: {} -> {}",
-                            target, old_value as u8, new_result as u8
-                        );
-                    }
-                } else {
-                    circuits.insert(target.clone(), new_result);
-                    changes_made = true;
-                    //println!("New circuit {}: {}", target, new_result as u8);
-                }
-            }
-        }
-
-        // Check if we've reached a stable state
-        if !changes_made || iteration > max_iterations {
-            //println!("Evaluation completed after {} iterations", iteration);
-            break;
-        }
+fn parse(input: &str) -> (HashMap<&str, bool>, HashMap<&str, Operation>) {
+    let (top, bottom) = input.split_once("\n\n").unwrap();
+    let mut wires = HashMap::new();
+    for line in top.lines() {
+        let (left, right) = line.split_once(": ").unwrap();
+        wires.insert(left, right == "1");
     }
-
-    circuits
+    let mut operations = HashMap::new();
+    for line in bottom.lines() {
+        let (left, right) = line.split_once(" -> ").unwrap();
+        let (lhs, op, rhs) = left.split_whitespace().collect_tuple().unwrap();
+        let op = match op {
+            "AND" => Operator::And,
+            "OR" => Operator::Or,
+            "XOR" => Operator::Xor,
+            _ => panic!("at the disco"),
+        };
+        operations.insert(right, Operation { lhs, op, rhs });
+    }
+    (wires, operations)
 }
 
-fn main() {
-    // Read input file
-    let input = std::fs::read_to_string("input.txt").expect("Failed to read input file");
+fn calc<'a>(
+    wires: &mut HashMap<&'a str, bool>,
+    ops: &HashMap<&'a str, Operation<'a>>,
+    wire: &'a str,
+) -> bool {
+    if let Some(&on) = wires.get(wire) {
+        return on;
+    }
+    let Operation { lhs, op, rhs } = &ops[wire];
+    let lhs = calc(wires, ops, lhs);
+    let rhs = calc(wires, ops, rhs);
+    let res = op.execute(lhs, rhs);
+    wires.insert(wire, res);
+    res
+}
 
-    // Parse input into circuits and operations
-    let (initial_circuits, operations) = parse_input(&input);
-
-    // Evaluate all operations
-    let final_circuits = evaluate_circuits(initial_circuits, &operations);
-
-    // Print results
-    //println!("Final circuit states:");
-    let mut sorted_circuits: Vec<_> = final_circuits.iter().collect();
-    sorted_circuits.sort_by(|a, b| a.0.cmp(b.0));
-
-    //for (circuit, value) in &sorted_circuits {
-    //    println!("{}: {}", circuit, if **value { 1 } else { 0 });
-    //}
-
-    // Extract the z-circuits and build binary number
-    let mut z_circuits: Vec<_> = sorted_circuits
-        .iter()
-        .filter(|(k, _)| k.starts_with('z'))
-        .collect();
-
-    // Sort by the number after 'z' to ensure correct order
-    z_circuits.sort_by(|(a, _), (b, _)| {
-        let a_num = a[1..].parse::<usize>().unwrap();
-        let b_num = b[1..].parse::<usize>().unwrap();
-        a_num.cmp(&b_num)
-    });
-
-    // Build binary string and decimal value
-    let binary: String = z_circuits
-        .iter()
+fn part_1(input: &str) -> u64 {
+    let (mut wires, ops) = parse(input);
+    ops.keys()
+        // get all wires that start with z and sort them
+        .filter(|name| name.starts_with('z'))
+        .sorted()
+        // least significant bit is first, reverse
         .rev()
-        .map(|(_, &value)| if value { '1' } else { '0' })
-        .collect();
-
-    let decimal = usize::from_str_radix(&binary, 2).unwrap();
-
-    println!("\nZ-circuit output:");
-    println!("Binary:  {}", binary);
-    println!("Decimal: {}", decimal);
+        // calculate the bits those wires output
+        .map(|name| calc(&mut wires, &ops, name))
+        // concatenate the bits (with boolean math!)
+        .fold(0, |acc, bit| acc << 1 | bit as u64)
 }
+
+fn make_wire(c: char, n: i32) -> String {
+    format!("{}{:02}", c, n)
+}
+
+fn is_ok_z(ops: &HashMap<&str, Operation>, wire: &str, num: i32) -> bool {
+    if let Some(Operation { lhs, op, rhs }) = ops.get(wire) {
+        if *op != Operator::Xor {
+            return false;
+        }
+        if num == 0 {
+            let mut operands = [*lhs, *rhs];
+            operands.sort();
+            return operands == ["x00", "y00"];
+        }
+        return (is_ok_xor(ops, lhs, num) && is_ok_carry_bit(ops, rhs, num))
+            || (is_ok_xor(ops, rhs, num) && is_ok_carry_bit(ops, lhs, num));
+    }
+    false
+}
+
+fn is_ok_xor(ops: &HashMap<&str, Operation>, wire: &str, num: i32) -> bool {
+    if let Some(Operation { lhs, op, rhs }) = ops.get(wire) {
+        if *op != Operator::Xor {
+            return false;
+        }
+        let mut operands = [*lhs, *rhs];
+        operands.sort();
+        return operands == [make_wire('x', num), make_wire('y', num)];
+    }
+    false
+}
+
+fn is_ok_carry_bit(ops: &HashMap<&str, Operation>, wire: &str, num: i32) -> bool {
+    if let Some(Operation { lhs, op, rhs }) = ops.get(wire) {
+        if num == 1 {
+            if *op != Operator::And {
+                return false;
+            }
+            let mut operands = [*lhs, *rhs];
+            operands.sort();
+            return operands == ["x00", "y00"];
+        }
+        if *op != Operator::Or {
+            return false;
+        }
+        return (is_ok_direct_carry(ops, lhs, num - 1) && is_ok_recarry(ops, rhs, num - 1))
+            || (is_ok_direct_carry(ops, rhs, num - 1) && is_ok_recarry(ops, lhs, num - 1));
+    }
+    false
+}
+
+fn is_ok_direct_carry(ops: &HashMap<&str, Operation>, wire: &str, num: i32) -> bool {
+    if let Some(Operation { lhs, op, rhs }) = ops.get(wire) {
+        if *op != Operator::And {
+            return false;
+        }
+        let mut operands = [*lhs, *rhs];
+        operands.sort();
+        return operands == [make_wire('x', num), make_wire('y', num)];
+    }
+    false
+}
+
+fn is_ok_recarry(ops: &HashMap<&str, Operation>, wire: &str, num: i32) -> bool {
+    if let Some(Operation { lhs, op, rhs }) = ops.get(wire) {
+        if *op != Operator::And {
+            return false;
+        }
+        return (is_ok_xor(ops, lhs, num) && is_ok_carry_bit(ops, rhs, num))
+            || (is_ok_xor(ops, rhs, num) && is_ok_carry_bit(ops, lhs, num));
+    }
+    false
+}
+
+fn progress(ops: &HashMap<&str, Operation>) -> i32 {
+    (0..)
+        .find(|&idx| !is_ok_z(ops, &make_wire('z', idx), idx))
+        .unwrap()
+}
+
+fn swap_wires<'a>(map: &mut HashMap<&'a str, Operation<'a>>, a: &'a str, b: &'a str) {
+    let temp = map[a];
+    map.insert(a, map[b]);
+    map.insert(b, temp);
+}
+
+fn part_2(input: &str) -> String {
+    let (_, mut ops) = parse(input);
+    let mut swaps = Vec::new();
+
+    let wires: Vec<&str> = ops.keys().copied().collect();
+    for _ in 0..4 {
+        let baseline = progress(&ops);
+        for (a, b) in wires.iter().tuple_combinations() {
+            swap_wires(&mut ops, a, b);
+            if progress(&ops) > baseline {
+                swaps.push([*a, *b]);
+                break;
+            }
+            swap_wires(&mut ops, a, b);
+        }
+    }
+
+    swaps
+        .into_iter()
+        .flatten()
+        .sorted()
+        .intersperse(",")
+        .collect()
+}
+
+fn main() -> std::io::Result<()> {
+    let input = std::fs::read_to_string("input.txt")?;
+
+    println!("Part 1: {}", part_1(&input));
+    println!("Part 2: {}", part_2(&input));
+
+    Ok(())
+}
+
