@@ -4,6 +4,9 @@ My solutions for [Advent of Code 2024](https://adventofcode.com/2024).
 
 I will be writing them in [Rust](https://www.rust-lang.org/).
 
+
+[img](./images/Finished.png)
+
 ## Days
 
 - [Day 1](day-01/)
