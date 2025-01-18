@@ -29,3 +29,5 @@ I will be writing them in [Rust](https://www.rust-lang.org/).
 - [Day 21](day-21/)
 - [Day 22](day-22/)
 - [Day 23](day-23/)
+- [Day 24](day-24/)
+- [Day 25](day-25/)
